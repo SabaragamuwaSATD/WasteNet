@@ -14,17 +14,42 @@ import {
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import RNHTMLtoPDF from "react-native-html-to-pdf";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../configs/FirebaseConfig";
+import * as Print from "expo-print";
 
 const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
 const paymentImg = require("../../assets/images/payment-check.png");
 
-const SalaryItem = ({ id, name, salary, onPress }) => (
+const SalaryItem = ({
+  id,
+  name,
+  salary,
+  workingDays,
+  workingHours,
+  totalSalary,
+  onPress,
+}) => (
   <TouchableOpacity onPress={onPress}>
     <View style={styles.paymentItem}>
       <View style={styles.paymentInfo}>
         <Text style={styles.paymentText}>Staff id - {id}</Text>
         <Text style={styles.paymentText}>Name - {name}</Text>
-        <Text style={styles.paymentText}>Salary LKR - {salary}</Text>
+        <Text style={styles.paymentText}>Basic Salary LKR - {salary}</Text>
+        <Text style={styles.paymentText}>Working Days - {workingDays}</Text>
+        <Text
+          style={[styles.paymentText, workingHours > 207 && { color: "red" }]}
+        >
+          Working Hours - {workingHours}
+        </Text>
+        <Text
+          style={[
+            styles.paymentTextNetSal,
+            workingHours > 207 && { color: "red" },
+          ]}
+        >
+          Net Salary - {totalSalary}
+        </Text>
       </View>
       <Image source={paymentImg} style={styles.avatar} />
     </View>
@@ -37,75 +62,92 @@ export default function Salary() {
     "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredPayments, setFilteredPayments] = useState([]);
-
-  const payments = [
-    { id: "P001", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Kamal Perera", salary: "10000" },
-  ];
+  const [staffList, setStaffList] = useState([]); // To store fetched staff data
+  const [filteredStaffList, setFilteredStaffList] = useState([]); // To store filtered staff data
 
   useEffect(() => {
-    setFilteredPayments(
-      payments.filter((payment) =>
-        payment.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    // Fetch staff data from Firestore
+    const fetchStaffData = async () => {
+      try {
+        const staffCollection = collection(db, "Register staff");
+        const staffSnapshot = await getDocs(staffCollection);
+        const staffData = staffSnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setStaffList(staffData); // Set the fetched data to state
+        setFilteredStaffList(staffData); // Initialize filtered list with full staff data
+      } catch (error) {
+        console.log("Error fetching staff data: ", error);
+      }
+    };
+
+    fetchStaffData();
+  }, []);
+
+  useEffect(() => {
+    // Filter staff list based on search query
+    const filteredList = staffList.filter((staff) =>
+      staff.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+    setFilteredStaffList(filteredList);
+  }, [searchQuery, staffList]);
 
-  const downloadReport = async () => {
+  const createAndDownloadPDF = async () => {
+    const htmlContent = `
+  <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+      </style>
+    </head>
+    <body>
+      <h1>Registered Staff</h1>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>NIC</th>
+          <th>Phone</th>
+          <th>Salary</th>
+          <th>Working Days</th>
+          <th>Working Hours</th>
+          <th>OT Rate</th>
+          <th>OT Amount</th>
+          <th>Net Salary</th>
+        </tr>
+        ${filteredStaffList
+          .map(
+            (staff) => `
+          <tr>
+            <td>${staff.name}</td>
+            <td>${staff.role}</td>
+            <td>${staff.nic}</td>
+            <td>${staff.phone}</td>
+            <td>${staff.salary}</td>
+            <td>${staff.workingDays}</td>
+            <td>${staff.workingHours}</td>
+            <td>${staff.otRate}</td>
+            <td>${staff.otAmount}</td>
+            <td>${staff.totalSalary}</td>
+          </tr>
+        `
+          )
+          .join("")}
+      </table>
+    </body>
+  </html>
+`;
+
     try {
-      // Generate HTML content for the PDF
-      const htmlContent = `
-        <html>
-          <head>
-            <style>
-              body { font-family: Arial, sans-serif; }
-              h1 { color: #007386; }
-              table { width: 100%; border-collapse: collapse; }
-              th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-            </style>
-          </head>
-          <body>
-            <h1>Payments Report</h1>
-            <table>
-              <tr>
-                <th>Payment ID</th>
-                <th>Name</th>
-                <th>Reason</th>
-              </tr>
-              ${filteredPayments
-                .map(
-                  (payment) => `
-                <tr>
-                  <td>${payment.id}</td>
-                  <td>${payment.name}</td>
-                  <td>${payment.reason}</td>
-                </tr>
-              `
-                )
-                .join("")}
-            </table>
-          </body>
-        </html>
-      `;
-
-      // Create a PDF from the HTML content
-      const pdfOptions = {
-        html: htmlContent,
-        fileName: "report",
-        directory: "Documents",
-      };
-      const pdf = await RNHTMLtoPDF.convert(pdfOptions);
-
-      // Share the PDF file
-      await Sharing.shareAsync(pdf.filePath);
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      await Sharing.shareAsync(uri);
     } catch (error) {
-      console.error("Error generating or sharing the PDF:", error);
-      Alert.alert("Error", "Failed to download the report.");
+      console.log("Error generating PDF: ", error);
     }
   };
 
@@ -133,11 +175,11 @@ export default function Salary() {
         </View>
         <Text style={styles.title}>Staff Salary Records</Text>
         <ScrollView
-          style={styles.paymentList}
+          style={styles.staffList}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
-          {filteredPayments.map((payment, index) => (
+          {filteredStaffList.map((payment, index) => (
             <SalaryItem
               key={index}
               {...payment}
@@ -156,7 +198,7 @@ export default function Salary() {
         </ScrollView>
         <TouchableOpacity
           style={styles.downloadButton}
-          onPress={downloadReport}
+          onPress={createAndDownloadPDF}
         >
           <Text style={styles.downloadText}>Download</Text>
         </TouchableOpacity>
@@ -256,5 +298,11 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "bold",
     marginLeft: 8,
+  },
+  paymentTextNetSal: {
+    color: "#4CAF50",
+    marginBottom: 4,
+    fontWeight: "bold",
+    fontSize: 20,
   },
 });
