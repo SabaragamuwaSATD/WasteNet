@@ -57,12 +57,6 @@ export default function MenuList() {
       icon: require("./../../assets/images/logout.png"),
       path: "logout",
     },
-    {
-      id: 7,
-      name: "Finance",
-      icon: require("./../../assets/images/logout.png"),
-      path: "../Finance/financeDashboard",
-    },
   ];
 
   // Function to handle menu click

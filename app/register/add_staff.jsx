@@ -13,7 +13,7 @@ import { useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "../../constants/Colors";
 import { db } from "./../../configs/FirebaseConfig";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker"; // Import DateTimePicker
 import { Picker } from "@react-native-picker/picker";
 
@@ -31,6 +31,9 @@ export default function AddStaff() {
   const [workingDays, setWorkingDays] = useState("");
   const [gender, setGender] = useState("");
   const [role, setRole] = useState("");
+  const [otAmount, setOtAmount] = useState("");
+  const [otRate, setOtRate] = useState("");
+  const [workingHours, setWorkingHours] = useState("");
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -65,6 +68,9 @@ export default function AddStaff() {
       }
       return;
     }
+
+    const newDocRef = doc(collection(db, "Register staff"));
+    const id = newDocRef.id;
 
     addDoc(collection(db, "Register staff"), {
       id,
