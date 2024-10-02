@@ -33,7 +33,7 @@ const SalaryItem = ({
   <TouchableOpacity onPress={onPress}>
     <View style={styles.paymentItem}>
       <View style={styles.paymentInfo}>
-        <Text style={styles.paymentText}>Staff id - {id}</Text>
+        {/* <Text style={styles.paymentText}>Staff id - {id}</Text> */}
         <Text style={styles.paymentText}>Name - {name}</Text>
         <Text style={styles.paymentText}>Basic Salary LKR - {salary}</Text>
         <Text style={styles.paymentText}>Working Days - {workingDays}</Text>
@@ -173,23 +173,34 @@ export default function Salary() {
             <Feather name="mic" size={20} color="#3D550C" />
           </View>
         </View>
-        <Text style={styles.title}>Staff Salary Records</Text>
+        <View style={styles.titleAndFilter}>
+          <Text style={styles.title}>Staff Salary Records</Text>
+          <TouchableOpacity>
+            <Text style={styles.filterText}>Filter</Text>
+          </TouchableOpacity>
+        </View>
         <ScrollView
           style={styles.staffList}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
-          {filteredStaffList.map((payment, index) => (
+          {filteredStaffList.map((staff, index) => (
             <SalaryItem
               key={index}
-              {...payment}
+              {...staff}
               onPress={() =>
                 router.push({
                   pathname: "./salaryDetails", // Adjust the path to your details screen
                   params: {
-                    id: payment.id,
-                    name: payment.name,
-                    salary: payment.salary,
+                    id: staff.id,
+                    name: staff.name,
+                    role: staff.role,
+                    salary: staff.salary,
+                    workingDays: staff.workingDays,
+                    workingHours: staff.workingHours,
+                    otAmount: staff.otAmount,
+                    otRate: staff.otRate,
+                    totalSalary: staff.totalSalary,
                   },
                 })
               }
@@ -304,5 +315,16 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontWeight: "bold",
     fontSize: 20,
+  },
+  titleAndFilter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  filterText: {
+    color: "#3D550C",
+    fontWeight: "bold",
+    marginBottom: 11,
+    fontSize: 16,
   },
 });
