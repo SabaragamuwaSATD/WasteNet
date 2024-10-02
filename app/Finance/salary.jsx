@@ -10,6 +10,8 @@ import {
   Image,
   StyleSheet,
   Alert,
+  Modal,
+  FlatList,
 } from "react-native";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
@@ -64,6 +66,8 @@ export default function Salary() {
   const [searchQuery, setSearchQuery] = useState("");
   const [staffList, setStaffList] = useState([]); // To store fetched staff data
   const [filteredStaffList, setFilteredStaffList] = useState([]); // To store filtered staff data
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("");
 
   useEffect(() => {
     // Fetch staff data from Firestore
@@ -92,6 +96,17 @@ export default function Salary() {
     );
     setFilteredStaffList(filteredList);
   }, [searchQuery, staffList]);
+
+  const handleFilter = (role) => {
+    setSelectedRole(role);
+    setModalVisible(false);
+    if (role === "") {
+      setFilteredStaffList(staffList);
+    } else {
+      const filteredList = staffList.filter((item) => item.role === role);
+      setFilteredStaffList(filteredList);
+    }
+  };
 
   const createAndDownloadPDF = async () => {
     const htmlContent = `
@@ -175,7 +190,7 @@ export default function Salary() {
         </View>
         <View style={styles.titleAndFilter}>
           <Text style={styles.title}>Staff Salary Records</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Text style={styles.filterText}>Filter</Text>
           </TouchableOpacity>
         </View>
@@ -214,6 +229,49 @@ export default function Salary() {
           <Text style={styles.downloadText}>Download</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Select Category</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleFilter("Driver")}
+            >
+              <Text style={styles.modalButtonText}>Driver</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleFilter("Cleaner")}
+            >
+              <Text style={styles.modalButtonText}>Cleaner</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleFilter("Office")}
+            >
+              <Text style={styles.modalButtonText}>Office</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleFilter("")}
+            >
+              <Text style={styles.modalButtonText}>All</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.modalcancelbutton]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -326,5 +384,49 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 11,
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalView: {
+    width: 300,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  modalButton: {
+    width: "100%",
+    height: 50,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3D550C",
+    marginTop: 10,
+  },
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  modalcancelbutton: {
+    backgroundColor: "#e25d5d",
   },
 });

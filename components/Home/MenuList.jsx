@@ -168,18 +168,6 @@ export default function MenuList() {
           </TouchableOpacity>
         )}
       />
-
-      {/* Footer */}
-      <Text
-        style={{
-          fontFamily: "outfit",
-          textAlign: "center",
-          marginTop: 50,
-          color: Colors.GRAY,
-        }}
-      >
-        Developed by Yenuli @ 2024
-      </Text>
     </View>
   );
 }

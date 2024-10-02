@@ -142,9 +142,6 @@ export default function StaffSalaryDetails() {
           >
             <Text style={styles.buttonText}>Update</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity style={[styles.button, styles.deleteButton]}>
-            <Text style={styles.buttonText}>Delete</Text>
-          </TouchableOpacity> */}
         </View>
       </View>
 

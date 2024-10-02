@@ -56,8 +56,7 @@ export default function AddStaff() {
       !phone ||
       !gender ||
       !role ||
-      !address ||
-      !workingDays
+      !address
     ) {
       if (Platform.OS === "web") {
         window.alert("Please fill all the fields before submitting"); // For web
