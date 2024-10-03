@@ -80,7 +80,7 @@ export default function UserHome() {
           <UserIntro />
         </View> */}
 
-        <View style={styles.searchBar}>
+        {/* <View style={styles.searchBar}>
           <Feather name="search" size={20} color="#3D550C" />
           <TextInput
             placeholder="Search"
@@ -88,46 +88,36 @@ export default function UserHome() {
             placeholderTextColor="#3D550C"
           />
           <Feather name="mic" size={20} color="#3D550C" />
-        </View>
+        </View> */}
 
         <View style={styles.ImageSlider}>
           <ImageSlider itemList={sliderImages} />
         </View>
 
-        {/* <Text style={styles.categoryTitle}>Category</Text>
+        {/* <Text style={styles.categoryTitle}>Category</Text> */}
 
         <View style={styles.categoryGrid}>
           <CategoryButton
             icon={paymentImg}
-            label="Staff"
-            onPress={() => router.push("./staff")}
+            label="Request"
+            onPress={() => router.push("./Request")}
           />
           <CategoryButton
             icon={salaryImg}
-            label="Finance"
+            label="Payments"
             onPress={() => router.push("../Finance/financeDashboard")}
           />
           <CategoryButton
             icon={ordersImg}
-            label="User"
+            label="My Requets"
             onPress={() => router.push("./orders")}
           />
           <CategoryButton
             icon={maintenanceImg}
-            label="Driver"
+            label="Reports"
             onPress={() => router.push("./maintenance")}
           />
-          <CategoryButton
-            icon={maintenanceImg}
-            label="Pay"
-            onPress={() => router.push("../Finance/userPaymentScreen")}
-          />
-          <CategoryButton
-            icon={maintenanceImg}
-            label="User Home"
-            onPress={() => router.push("../User/UserHome")}
-          />
-        </View> */}
+        </View>
       </ScrollView>
     </SafeAreaView>
     // <View
@@ -198,6 +188,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginBottom: 24,
+    marginTop: -20,
   },
   searchInput: {
     flex: 1,
@@ -210,12 +201,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#3D550C",
     marginBottom: 16,
+    marginTop: -20,
   },
   categoryGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    marginTop: 10,
+    marginTop: -20,
   },
   categoryButton: {
     width: "48%",
