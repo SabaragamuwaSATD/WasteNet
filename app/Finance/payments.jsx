@@ -11,23 +11,39 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import RNHTMLtoPDF from "react-native-html-to-pdf";
+import * as Print from "expo-print";
+import { collection, getDoc, getDocs } from "firebase/firestore";
+import { db } from "../../configs/FirebaseConfig";
 
 const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
 const paymentImg = require("../../assets/images/payment-check.png");
 
-const PaymentItem = ({ id, name, reason }) => (
-  <View style={styles.paymentItem}>
-    <View style={styles.paymentInfo}>
-      <Text style={styles.paymentText}>Payment id - {id}</Text>
-      <Text style={styles.paymentText}>Name - {name}</Text>
-      <Text style={styles.paymentText}>Reason - {reason}</Text>
+const PaymentItem = ({ id, userName, paymentDate, billAddress, amount }) => {
+  const formattedDate = new Date(paymentDate).toLocaleString("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+
+  return (
+    <View style={styles.paymentItem}>
+      <View style={styles.paymentInfo}>
+        <Text style={styles.paymentText}>Payment id - {id}</Text>
+        <Text style={styles.paymentText}>Name - {userName}</Text>
+        <Text style={styles.paymentText}>Date - {formattedDate}</Text>
+        <Text style={styles.paymentText}>Bill Address - {billAddress}</Text>
+        <Text style={styles.paymentText}>Amount - RS: 1500.00</Text>
+        {/* <Text style={styles.paymentText}>Reason - {reason}</Text> */}
+      </View>
+      <Image source={paymentImg} style={styles.avatar} />
     </View>
-    <Image source={paymentImg} style={styles.avatar} />
-  </View>
-);
+  );
+};
 
 export default function EcoPayScreen() {
   const imageUrl =
@@ -35,75 +51,90 @@ export default function EcoPayScreen() {
 
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [paymentList, setPaymentList] = useState([]);
   const [filteredPayments, setFilteredPayments] = useState([]);
 
-  const payments = [
-    { id: "P001", name: "Saman Perera", reason: "Collect" },
-    { id: "100", name: "Saman Perera", reason: "Collect" },
-    { id: "100", name: "Saman Perera", reason: "Collect" },
-    { id: "100", name: "Saman Perera", reason: "Collect" },
-    { id: "100", name: "Saman Perera", reason: "Collect" },
-    { id: "100", name: "Kamal Perera", reason: "Collect" },
-  ];
-
   useEffect(() => {
-    setFilteredPayments(
-      payments.filter((payment) =>
-        payment.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-  }, [searchQuery]);
+    const fetchPayaments = async () => {
+      try {
+        const paymentCollection = collection(db, "Payments");
+        const paymentsSnapshot = await getDocs(paymentCollection);
+        const payments = paymentsSnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setPaymentList(payments);
+        // setFilteredPayments(payments);
+      } catch (error) {
+        console.error("Error fetching payments", error);
+      }
+    };
+    fetchPayaments();
+  }, []);
 
-  const downloadReport = async () => {
+  //   // useEffect(() => {
+  //   //   console.log("Filtering payments with query:", searchQuery); // Debugging log
+  //   //   setFilteredPayments(
+  //   //     paymentList.filter((payment) =>
+  //   //       payment.userName.toLowerCase().includes(searchQuery.toLowerCase())
+  //   //     )
+  //   //   );
+  //   // }, [paymentList, searchQuery]);
+
+  const createAndDownloadPDF = async () => {
+    const htmlContent = `
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h1 { text-align: center; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
+          th { background-color: #f2f2f2; }
+          .company-info { text-align: left; margin-bottom: 20px; }
+          .company-logo { width: 100px; height: auto; }
+        </style>
+      </head>
+      <body>
+        <div class="company-info">
+          <h2>Wastenet PVT LTD</h2>
+          <p>143/1, Kaduwela, Sri Lanka, 71430</p>
+          <p>Phone: (123) 456-7890</p>
+          <p>Email: wastenet@company.com</p>
+        </div>
+        <h1>Payment Records</h1>
+        <table>
+          <tr>
+            <th>Payment Id</th>
+            <th>Payee Name</th>
+            <th>Bill Address</th>
+            <th>Date</th>
+            <th>Amount</th>
+          </tr>
+          ${paymentList
+            .map(
+              (payments) => `
+            <tr>
+            <td>${payments.id}</td>
+            <td>${payments.userName}</td>
+            <td>${payments.billAddress}</td>
+            <td>${payments.paymentDate}</td>
+            <td>Rs. 1500</td>
+            
+            </tr>
+          `
+            )
+            .join("")}
+        </table>
+      </body>
+    </html>
+  `;
+
     try {
-      // Generate HTML content for the PDF
-      const htmlContent = `
-        <html>
-          <head>
-            <style>
-              body { font-family: Arial, sans-serif; }
-              h1 { color: #007386; }
-              table { width: 100%; border-collapse: collapse; }
-              th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-            </style>
-          </head>
-          <body>
-            <h1>Payments Report</h1>
-            <table>
-              <tr>
-                <th>Payment ID</th>
-                <th>Name</th>
-                <th>Reason</th>
-              </tr>
-              ${filteredPayments
-                .map(
-                  (payment) => `
-                <tr>
-                  <td>${payment.id}</td>
-                  <td>${payment.name}</td>
-                  <td>${payment.reason}</td>
-                </tr>
-              `
-                )
-                .join("")}
-            </table>
-          </body>
-        </html>
-      `;
-
-      // Create a PDF from the HTML content
-      const pdfOptions = {
-        html: htmlContent,
-        fileName: "report",
-        directory: "Documents",
-      };
-      const pdf = await RNHTMLtoPDF.convert(pdfOptions);
-
-      // Share the PDF file
-      await Sharing.shareAsync(pdf.filePath);
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      await Sharing.shareAsync(uri);
     } catch (error) {
-      console.error("Error generating or sharing the PDF:", error);
-      Alert.alert("Error", "Failed to download the report.");
+      console.log("Error generating PDF: ", error);
     }
   };
 
@@ -135,13 +166,13 @@ export default function EcoPayScreen() {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
-          {filteredPayments.map((payment, index) => (
+          {paymentList.map((payment, index) => (
             <PaymentItem key={index} {...payment} />
           ))}
         </ScrollView>
         <TouchableOpacity
           style={styles.downloadButton}
-          onPress={downloadReport}
+          onPress={createAndDownloadPDF}
         >
           <Text style={styles.downloadText}>Download</Text>
         </TouchableOpacity>
