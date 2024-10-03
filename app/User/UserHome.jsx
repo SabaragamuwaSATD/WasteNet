@@ -100,7 +100,7 @@ export default function UserHome() {
           <CategoryButton
             icon={paymentImg}
             label="Request"
-            onPress={() => router.push("./Request")}
+            onPress={() => router.push("./sendRequest")}
           />
           <CategoryButton
             icon={salaryImg}
@@ -110,7 +110,7 @@ export default function UserHome() {
           <CategoryButton
             icon={ordersImg}
             label="My Requets"
-            onPress={() => router.push("./orders")}
+            onPress={() => router.push("./userRequests")}
           />
           <CategoryButton
             icon={maintenanceImg}

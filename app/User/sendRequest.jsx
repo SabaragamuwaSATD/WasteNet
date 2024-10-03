@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import {
   View,
@@ -8,16 +8,24 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Platform,
+  Alert,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { db } from "../../configs/FirebaseConfig";
+import { useUser } from "@clerk/clerk-react";
 
 export default function CollectRequestScreen() {
+  const { user } = useUser();
+  const router = useRouter();
   const imageUrl =
     "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
-  const [name, setName] = useState("");
+  const name = user.fullName;
   const [email, setEmail] = useState("");
   const [date, setDate] = useState(new Date());
   const [phone, setPhone] = useState("");
@@ -38,17 +46,50 @@ export default function CollectRequestScreen() {
     setLocation(e.nativeEvent.coordinate);
   };
 
-  const onSend = () => {
-    console.log("Sending request:", {
+  function create() {
+    if (!name || !email || !phone || !area) {
+      if (Platform.OS === "web") {
+        window.alert("Please fill all the fields before submitting"); // For web
+      } else {
+        Alert.alert("Please fill all the fields before submitting"); // For mobile
+      }
+      return;
+    }
+
+    const newDocRef = doc(collection(db, "Collection Requests"));
+    const id = newDocRef.id;
+
+    addDoc(collection(db, "Collection Requests"), {
+      id,
       name,
       email,
       date,
       phone,
       area,
       location,
-    });
-    // Implement your send logic here
-  };
+    })
+      .then(() => {
+        console.log("Collection Request Submitted with ID: ", id);
+
+        if (Platform.OS === "web") {
+          window.alert("Collection Request Submitted successfully!"); // Web alert
+        } else {
+          Alert.alert("Success", "Collection Request Submitted successfully!"); // Mobile alert
+        }
+
+        router.push("./UserHome");
+      })
+      .catch((error) => {
+        console.log(error);
+
+        // Show error message based on platform
+        if (Platform.OS === "web") {
+          window.alert("Error: Something went wrong"); // Web alert
+        } else {
+          Alert.alert("Error", "Something went wrong"); // Mobile alert
+        }
+      });
+  }
 
   return (
     <View style={styles.container}>
@@ -76,9 +117,9 @@ export default function CollectRequestScreen() {
         <Text style={styles.header}>Send New Collect Request</Text>
         <TextInput
           style={styles.input}
-          placeholder="Name..."
+          placeholder="Full Name"
           value={name}
-          onChangeText={setName}
+          editable={false} // Make it non-editable if needed
         />
         <TextInput
           style={styles.input}
@@ -125,7 +166,7 @@ export default function CollectRequestScreen() {
         >
           <Marker coordinate={location} />
         </MapView>
-        <TouchableOpacity style={styles.sendButton} onPress={onSend}>
+        <TouchableOpacity style={styles.sendButton} onPress={create}>
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </ScrollView>
