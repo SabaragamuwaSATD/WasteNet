@@ -14,6 +14,9 @@ import { Feather } from "@expo/vector-icons";
 import logoImage from "../../assets/images/d.png";
 import UserIntro from "../../components/Home/UserIntro";
 import { useRouter } from "expo-router";
+import { useUser } from "@clerk/clerk-react";
+import ImageSlider from "../../components/ImageSlider";
+import { sliderImages } from "../../constants";
 
 const CategoryButton = ({ icon, label, onPress }) => (
   <TouchableOpacity style={styles.categoryButton} onPress={onPress}>
@@ -31,8 +34,9 @@ const salaryImg = require("../../assets/images/salary.png");
 const ordersImg = require("../../assets/images/cargo.png");
 const maintenanceImg = require("../../assets/images/cargo.png");
 
-export default function home() {
+export default function UserHome() {
   const logoImage = require("../../assets/images/d.png");
+  const { user } = useUser();
 
   const router = useRouter();
 
@@ -51,12 +55,30 @@ export default function home() {
             />
             {/* <Text style={styles.title}>WasteNet</Text> */}
           </View>
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 5,
+              marginTop: 10,
+            }}
+          >
+            <Image
+              source={{ uri: user?.imageUrl }}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 99,
+              }}
+            />
+          </View>
           {/* <Feather name="user" size={24} color="#3D550C" /> */}
         </View>
 
-        <View style={styles.userInfo}>
+        {/* <View style={styles.userInfo}>
           <UserIntro />
-        </View>
+        </View> */}
 
         <View style={styles.searchBar}>
           <Feather name="search" size={20} color="#3D550C" />
@@ -68,7 +90,11 @@ export default function home() {
           <Feather name="mic" size={20} color="#3D550C" />
         </View>
 
-        <Text style={styles.categoryTitle}>Category</Text>
+        <View style={styles.ImageSlider}>
+          <ImageSlider itemList={sliderImages} />
+        </View>
+
+        {/* <Text style={styles.categoryTitle}>Category</Text>
 
         <View style={styles.categoryGrid}>
           <CategoryButton
@@ -101,7 +127,7 @@ export default function home() {
             label="User Home"
             onPress={() => router.push("../User/UserHome")}
           />
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
     // <View
@@ -232,5 +258,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     width: 130, // Set the desired width
     height: 50,
+  },
+  ImageSlider: {
+    marginBottom: 16,
+    justifyContent: "center",
+    marginRight: -16,
+    marginLeft: -16,
   },
 });
