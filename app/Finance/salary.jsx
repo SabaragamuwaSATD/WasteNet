@@ -10,21 +10,48 @@ import {
   Image,
   StyleSheet,
   Alert,
+  Modal,
+  FlatList,
 } from "react-native";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import RNHTMLtoPDF from "react-native-html-to-pdf";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../configs/FirebaseConfig";
+import * as Print from "expo-print";
 
 const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
 const paymentImg = require("../../assets/images/payment-check.png");
 
-const SalaryItem = ({ id, name, salary, onPress }) => (
+const SalaryItem = ({
+  id,
+  name,
+  salary,
+  workingDays,
+  workingHours,
+  totalSalary,
+  onPress,
+}) => (
   <TouchableOpacity onPress={onPress}>
     <View style={styles.paymentItem}>
       <View style={styles.paymentInfo}>
-        <Text style={styles.paymentText}>Staff id - {id}</Text>
+        {/* <Text style={styles.paymentText}>Staff id - {id}</Text> */}
         <Text style={styles.paymentText}>Name - {name}</Text>
-        <Text style={styles.paymentText}>Salary LKR - {salary}</Text>
+        <Text style={styles.paymentText}>Basic Salary LKR - {salary}</Text>
+        <Text style={styles.paymentText}>Working Days - {workingDays}</Text>
+        <Text
+          style={[styles.paymentText, workingHours > 207 && { color: "red" }]}
+        >
+          Working Hours - {workingHours}
+        </Text>
+        <Text
+          style={[
+            styles.paymentTextNetSal,
+            workingHours > 207 && { color: "red" },
+          ]}
+        >
+          Net Salary - {totalSalary}
+        </Text>
       </View>
       <Image source={paymentImg} style={styles.avatar} />
     </View>
@@ -37,75 +64,105 @@ export default function Salary() {
     "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredPayments, setFilteredPayments] = useState([]);
-
-  const payments = [
-    { id: "P001", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Saman Perera", salary: "10000" },
-    { id: "100", name: "Kamal Perera", salary: "10000" },
-  ];
+  const [staffList, setStaffList] = useState([]); // To store fetched staff data
+  const [filteredStaffList, setFilteredStaffList] = useState([]); // To store filtered staff data
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("");
 
   useEffect(() => {
-    setFilteredPayments(
-      payments.filter((payment) =>
-        payment.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    // Fetch staff data from Firestore
+    const fetchStaffData = async () => {
+      try {
+        const staffCollection = collection(db, "Register staff");
+        const staffSnapshot = await getDocs(staffCollection);
+        const staffData = staffSnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setStaffList(staffData); // Set the fetched data to state
+        setFilteredStaffList(staffData); // Initialize filtered list with full staff data
+      } catch (error) {
+        console.log("Error fetching staff data: ", error);
+      }
+    };
+
+    fetchStaffData();
+  }, []);
+
+  useEffect(() => {
+    // Filter staff list based on search query
+    const filteredList = staffList.filter((staff) =>
+      staff.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+    setFilteredStaffList(filteredList);
+  }, [searchQuery, staffList]);
 
-  const downloadReport = async () => {
+  const handleFilter = (role) => {
+    setSelectedRole(role);
+    setModalVisible(false);
+    if (role === "") {
+      setFilteredStaffList(staffList);
+    } else {
+      const filteredList = staffList.filter((item) => item.role === role);
+      setFilteredStaffList(filteredList);
+    }
+  };
+
+  const createAndDownloadPDF = async () => {
+    const htmlContent = `
+  <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+      </style>
+    </head>
+    <body>
+      <h1>Registered Staff</h1>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>NIC</th>
+          <th>Phone</th>
+          <th>Salary</th>
+          <th>Working Days</th>
+          <th>Working Hours</th>
+          <th>OT Rate</th>
+          <th>OT Amount</th>
+          <th>Net Salary</th>
+        </tr>
+        ${filteredStaffList
+          .map(
+            (staff) => `
+          <tr>
+            <td>${staff.name}</td>
+            <td>${staff.role}</td>
+            <td>${staff.nic}</td>
+            <td>${staff.phone}</td>
+            <td>${staff.salary}</td>
+            <td>${staff.workingDays}</td>
+            <td>${staff.workingHours}</td>
+            <td>${staff.otRate}</td>
+            <td>${staff.otAmount}</td>
+            <td>${staff.totalSalary}</td>
+          </tr>
+        `
+          )
+          .join("")}
+      </table>
+    </body>
+  </html>
+`;
+
     try {
-      // Generate HTML content for the PDF
-      const htmlContent = `
-        <html>
-          <head>
-            <style>
-              body { font-family: Arial, sans-serif; }
-              h1 { color: #007386; }
-              table { width: 100%; border-collapse: collapse; }
-              th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-            </style>
-          </head>
-          <body>
-            <h1>Payments Report</h1>
-            <table>
-              <tr>
-                <th>Payment ID</th>
-                <th>Name</th>
-                <th>Reason</th>
-              </tr>
-              ${filteredPayments
-                .map(
-                  (payment) => `
-                <tr>
-                  <td>${payment.id}</td>
-                  <td>${payment.name}</td>
-                  <td>${payment.reason}</td>
-                </tr>
-              `
-                )
-                .join("")}
-            </table>
-          </body>
-        </html>
-      `;
-
-      // Create a PDF from the HTML content
-      const pdfOptions = {
-        html: htmlContent,
-        fileName: "report",
-        directory: "Documents",
-      };
-      const pdf = await RNHTMLtoPDF.convert(pdfOptions);
-
-      // Share the PDF file
-      await Sharing.shareAsync(pdf.filePath);
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      await Sharing.shareAsync(uri);
     } catch (error) {
-      console.error("Error generating or sharing the PDF:", error);
-      Alert.alert("Error", "Failed to download the report.");
+      console.log("Error generating PDF: ", error);
     }
   };
 
@@ -131,23 +188,34 @@ export default function Salary() {
             <Feather name="mic" size={20} color="#3D550C" />
           </View>
         </View>
-        <Text style={styles.title}>Staff Salary Records</Text>
+        <View style={styles.titleAndFilter}>
+          <Text style={styles.title}>Staff Salary Records</Text>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text style={styles.filterText}>Filter</Text>
+          </TouchableOpacity>
+        </View>
         <ScrollView
-          style={styles.paymentList}
+          style={styles.staffList}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
-          {filteredPayments.map((payment, index) => (
+          {filteredStaffList.map((staff, index) => (
             <SalaryItem
               key={index}
-              {...payment}
+              {...staff}
               onPress={() =>
                 router.push({
                   pathname: "./salaryDetails", // Adjust the path to your details screen
                   params: {
-                    id: payment.id,
-                    name: payment.name,
-                    salary: payment.salary,
+                    id: staff.id,
+                    name: staff.name,
+                    role: staff.role,
+                    salary: staff.salary,
+                    workingDays: staff.workingDays,
+                    workingHours: staff.workingHours,
+                    otAmount: staff.otAmount,
+                    otRate: staff.otRate,
+                    totalSalary: staff.totalSalary,
                   },
                 })
               }
@@ -156,11 +224,54 @@ export default function Salary() {
         </ScrollView>
         <TouchableOpacity
           style={styles.downloadButton}
-          onPress={downloadReport}
+          onPress={createAndDownloadPDF}
         >
           <Text style={styles.downloadText}>Download</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Select Category</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleFilter("Driver")}
+            >
+              <Text style={styles.modalButtonText}>Driver</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleFilter("Cleaner")}
+            >
+              <Text style={styles.modalButtonText}>Cleaner</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleFilter("Office")}
+            >
+              <Text style={styles.modalButtonText}>Office</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleFilter("")}
+            >
+              <Text style={styles.modalButtonText}>All</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.modalcancelbutton]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -256,5 +367,66 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "bold",
     marginLeft: 8,
+  },
+  paymentTextNetSal: {
+    color: "#4CAF50",
+    marginBottom: 4,
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  titleAndFilter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  filterText: {
+    color: "#3D550C",
+    fontWeight: "bold",
+    marginBottom: 11,
+    fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalView: {
+    width: 300,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  modalButton: {
+    width: "100%",
+    height: 50,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#3D550C",
+    marginTop: 10,
+  },
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  modalcancelbutton: {
+    backgroundColor: "#e25d5d",
   },
 });

@@ -15,12 +15,13 @@ import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
+import { useUser } from "@clerk/clerk-react";
 
 const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
 const paymentImg = require("../../assets/images/payment-check.png");
 
-const PaymentItem = ({ id, userName, paymentDate, billAddress, amount }) => {
-  const formattedDate = new Date(paymentDate).toLocaleString("en-US", {
+const RequestItem = ({ id, name, date, area }) => {
+  const formattedDate = new Date(date).toLocaleString("en-US", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -33,110 +34,103 @@ const PaymentItem = ({ id, userName, paymentDate, billAddress, amount }) => {
   return (
     <View style={styles.paymentItem}>
       <View style={styles.paymentInfo}>
-        <Text style={styles.paymentText}>Payment id - {id}</Text>
-        <Text style={styles.paymentText}>Name - {userName}</Text>
+        <Text style={styles.paymentText}>Request id - {id}</Text>
+        <Text style={styles.paymentText}>Name - {name}</Text>
         <Text style={styles.paymentText}>Date - {formattedDate}</Text>
-        <Text style={styles.paymentText}>Bill Address - {billAddress}</Text>
-        <Text style={styles.paymentText}>Amount - RS: 1500.00</Text>
-        {/* <Text style={styles.paymentText}>Reason - {reason}</Text> */}
+        <Text style={styles.paymentText}>Area - {area}</Text>
       </View>
       <Image source={paymentImg} style={styles.avatar} />
     </View>
   );
 };
 
-export default function EcoPayScreen() {
+export default function UserRequests() {
   const imageUrl =
     "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
   const router = useRouter();
+  const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
-  const [paymentList, setPaymentList] = useState([]);
-  const [filteredPayments, setFilteredPayments] = useState([]);
+  const [requestList, setRequestList] = useState([]);
 
   useEffect(() => {
-    const fetchPayaments = async () => {
+    const fetchRequets = async () => {
       try {
-        const paymentCollection = collection(db, "Payments");
-        const paymentsSnapshot = await getDocs(paymentCollection);
-        const payments = paymentsSnapshot.docs.map((doc) => ({
+        const requestCollection = collection(db, "Collection Requests");
+        const requestSnapshot = await getDocs(requestCollection);
+        const requests = requestSnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        setPaymentList(payments);
-        // setFilteredPayments(payments);
+
+        const filteredRequests = requests.filter(
+          (request) => request.name === user.fullName
+        );
+
+        setRequestList(filteredRequests);
       } catch (error) {
         console.error("Error fetching payments", error);
       }
     };
-    fetchPayaments();
-  }, []);
+    fetchRequets();
+  }, [user.fullName]);
 
-  //   // useEffect(() => {
-  //   //   console.log("Filtering payments with query:", searchQuery); // Debugging log
-  //   //   setFilteredPayments(
-  //   //     paymentList.filter((payment) =>
-  //   //       payment.userName.toLowerCase().includes(searchQuery.toLowerCase())
-  //   //     )
-  //   //   );
-  //   // }, [paymentList, searchQuery]);
+  //   const createAndDownloadPDF = async () => {
+  //     const htmlContent = `
+  //     <html>
+  //       <head>
+  //         <style>
+  //           body { font-family: Arial, sans-serif; padding: 20px; }
+  //           h1 { text-align: center; }
+  //           table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  //           table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
+  //           th { background-color: #f2f2f2; }
+  //           .company-info { text-align: left; margin-bottom: 20px; }
+  //           .company-logo { width: 100px; height: auto; }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <div class="company-info">
+  //           <h2>Wastenet PVT LTD</h2>
+  //           <p>143/1, Kaduwela, Sri Lanka, 71430</p>
+  //           <p>Phone: (123) 456-7890</p>
+  //           <p>Email: wastenet@company.com</p>
+  //         </div>
+  //         <h1>Payment Records</h1>
+  //         <table>
+  //           <tr>
+  //             <th>Payment Id</th>
+  //             <th>Payee Name</th>
+  //             <th>Bill Address</th>
+  //             <th>Date</th>
+  //             <th>Amount</th>
+  //           </tr>
+  //           ${paymentList
+  //             .map(
+  //               (payments) => `
+  //             <tr>
+  //             <td>${payments.id}</td>
+  //             <td>${payments.userName}</td>
+  //             <td>${payments.billAddress}</td>
+  //             <td>${payments.paymentDate}</td>
+  //             <td>Rs. 1500</td>
 
-  const createAndDownloadPDF = async () => {
-    const htmlContent = `
-    <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 20px; }
-          h1 { text-align: center; }
-          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-          table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
-          th { background-color: #f2f2f2; }
-          .company-info { text-align: left; margin-bottom: 20px; }
-          .company-logo { width: 100px; height: auto; }
-        </style>
-      </head>
-      <body>
-        <div class="company-info">
-          <h2>Wastenet PVT LTD</h2>
-          <p>143/1, Kaduwela, Sri Lanka, 71430</p>
-          <p>Phone: (123) 456-7890</p>
-          <p>Email: wastenet@company.com</p>
-        </div>
-        <h1>Payment Records</h1>
-        <table>
-          <tr>
-            <th>Payment Id</th>
-            <th>Payee Name</th>
-            <th>Bill Address</th>
-            <th>Date</th>
-            <th>Amount</th>
-          </tr>
-          ${paymentList
-            .map(
-              (payments) => `
-            <tr>
-            <td>${payments.id}</td>
-            <td>${payments.userName}</td>
-            <td>${payments.billAddress}</td>
-            <td>${payments.paymentDate}</td>
-            <td>Rs. 1500</td>
-            
-            </tr>
-          `
-            )
-            .join("")}
-        </table>
-      </body>
-    </html>
-  `;
+  //             </tr>
+  //           `
+  //             )
+  //             .join("")}
+  //         </table>
+  //       </body>
+  //     </html>
+  //   `;
 
-    try {
-      const { uri } = await Print.printToFileAsync({ html: htmlContent });
-      await Sharing.shareAsync(uri);
-    } catch (error) {
-      console.log("Error generating PDF: ", error);
-    }
-  };
+  //     try {
+  //       const { uri } = await Print.printToFileAsync({ html: htmlContent });
+  //       await Sharing.shareAsync(uri);
+  //     } catch (error) {
+  //       console.log("Error generating PDF: ", error);
+  //     }
+  //   };
 
   return (
     <View style={styles.container}>
@@ -160,22 +154,22 @@ export default function EcoPayScreen() {
             <Feather name="mic" size={20} color="#3D550C" />
           </View>
         </View>
-        <Text style={styles.title}>Recent Payments</Text>
+        <Text style={styles.title}>My Requests</Text>
         <ScrollView
           style={styles.paymentList}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
-          {paymentList.map((payment, index) => (
-            <PaymentItem key={index} {...payment} />
+          {requestList.map((request, index) => (
+            <RequestItem key={index} {...request} />
           ))}
         </ScrollView>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.downloadButton}
           onPress={createAndDownloadPDF}
         >
           <Text style={styles.downloadText}>Download</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
