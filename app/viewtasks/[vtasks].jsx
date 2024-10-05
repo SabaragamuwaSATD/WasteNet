@@ -176,7 +176,7 @@ export default function ViewTasks() {
       <View style={{
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#a1a9a4',
+        backgroundColor: '#d4e3b5',
         padding: 10,
         marginVertical: 10,
         marginTop: 2,

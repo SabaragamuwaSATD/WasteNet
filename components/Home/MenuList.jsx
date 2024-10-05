@@ -103,7 +103,7 @@ export default function MenuList() {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            backgroundColor: "#a1a9a4",
+            backgroundColor: "#d4e3b5",
             padding: 10,
             borderRadius: 8,
             width: "65%",

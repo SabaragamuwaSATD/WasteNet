@@ -17,6 +17,7 @@ import * as Print from "expo-print";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 import { useUser } from "@clerk/clerk-react";
+import { Colors } from "../../constants/Colors";
 
 const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
 const paymentImg = require("../../assets/images/payment-check.png");
@@ -155,7 +156,7 @@ export default function UserRequests() {
             <Feather name="mic" size={20} color="#3D550C" />
           </View>
         </View>
-        <Text style={styles.title}>My Requests</Text>
+        <Text style={styles.title}>Client Requests</Text>
         <ScrollView
           style={styles.paymentList}
           showsHorizontalScrollIndicator={false}
