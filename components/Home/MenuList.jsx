@@ -25,7 +25,7 @@ export default function MenuList() {
       id: 1,
       name: "Client Requests",
       icon: require("./../../assets/images/analysis.png"),
-      path: "",
+      path: "/viewrequest/[vrequest]",
     },
     {
       id: 2,

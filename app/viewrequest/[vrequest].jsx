@@ -10,7 +10,6 @@ import {
   Image,
   StyleSheet,
   Alert,
-  Button,
 } from "react-native";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
@@ -39,15 +38,6 @@ const RequestItem = ({ id, name, date, area }) => {
         <Text style={styles.paymentText}>Name - {name}</Text>
         <Text style={styles.paymentText}>Date - {formattedDate}</Text>
         <Text style={styles.paymentText}>Area - {area}</Text>
-       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Update</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.UpdateButton}>
-          <Text style={styles.updateButtonText}>Delete</Text>
-        </TouchableOpacity>
-        
-        </View> 
       </View>
       <Image source={paymentImg} style={styles.avatar} />
     </View>
@@ -85,62 +75,62 @@ export default function UserRequests() {
     fetchRequets();
   }, [user.fullName]);
 
-    const createAndDownloadPDF = async () => {
-      const htmlContent = `
-      <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; }
-            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-            table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            .company-info { text-align: left; margin-bottom: 20px; }
-            .company-logo { width: 100px; height: auto; }
-          </style>
-        </head>
-        <body>
-          <div class="company-info">
-            <h2>Wastenet PVT LTD</h2>
-            <p>143/1, Kaduwela, Sri Lanka, 71430</p>
-            <p>Phone: (123) 456-7890</p>
-            <p>Email: wastenet@company.com</p>
-          </div>
-          <h1>Payment Records</h1>
-          <table>
-            <tr>
-              <th>Payment Id</th>
-              <th>Payee Name</th>
-              <th>Bill Address</th>
-              <th>Date</th>
-              <th>Amount</th>
-            </tr>
-            ${requestList
-              .map(
-                (request) => `
-              <tr>
-              <td>${request.id}</td>
-              <td>${request.name}</td>
-              <td>${request.area}</td>
-              <td>${request.date}</td>
-              <td>Rs. 1500</td>
+  //   const createAndDownloadPDF = async () => {
+  //     const htmlContent = `
+  //     <html>
+  //       <head>
+  //         <style>
+  //           body { font-family: Arial, sans-serif; padding: 20px; }
+  //           h1 { text-align: center; }
+  //           table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  //           table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
+  //           th { background-color: #f2f2f2; }
+  //           .company-info { text-align: left; margin-bottom: 20px; }
+  //           .company-logo { width: 100px; height: auto; }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <div class="company-info">
+  //           <h2>Wastenet PVT LTD</h2>
+  //           <p>143/1, Kaduwela, Sri Lanka, 71430</p>
+  //           <p>Phone: (123) 456-7890</p>
+  //           <p>Email: wastenet@company.com</p>
+  //         </div>
+  //         <h1>Payment Records</h1>
+  //         <table>
+  //           <tr>
+  //             <th>Payment Id</th>
+  //             <th>Payee Name</th>
+  //             <th>Bill Address</th>
+  //             <th>Date</th>
+  //             <th>Amount</th>
+  //           </tr>
+  //           ${paymentList
+  //             .map(
+  //               (payments) => `
+  //             <tr>
+  //             <td>${payments.id}</td>
+  //             <td>${payments.userName}</td>
+  //             <td>${payments.billAddress}</td>
+  //             <td>${payments.paymentDate}</td>
+  //             <td>Rs. 1500</td>
 
-              </tr>
-            `
-              )
-              .join("")}
-          </table>
-        </body>
-      </html>
-    `;
+  //             </tr>
+  //           `
+  //             )
+  //             .join("")}
+  //         </table>
+  //       </body>
+  //     </html>
+  //   `;
 
-      try {
-        const { uri } = await Print.printToFileAsync({ html: htmlContent });
-        await Sharing.shareAsync(uri);
-      } catch (error) {
-        console.log("Error generating PDF: ", error);
-      }
-    };
+  //     try {
+  //       const { uri } = await Print.printToFileAsync({ html: htmlContent });
+  //       await Sharing.shareAsync(uri);
+  //     } catch (error) {
+  //       console.log("Error generating PDF: ", error);
+  //     }
+  //   };
 
   return (
     <View style={styles.container}>
@@ -174,12 +164,12 @@ export default function UserRequests() {
             <RequestItem key={index} {...request} />
           ))}
         </ScrollView>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.downloadButton}
           onPress={createAndDownloadPDF}
         >
           <Text style={styles.downloadText}>Download</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -259,7 +249,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 20,
-
   },
   downloadButton: {
     flexDirection: "row",
@@ -278,40 +267,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 8,
   },
-  deleteButton:{
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FF4D4D",
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 16,
-    height: 50,
-    width: "50%",
-    alignSelf: "center",
-    marginLeft:30,
-  },deleteButtonText:{
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    // marginLeft: 8,
-  },UpdateButton:{
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FF4D4D",
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 16,
-    height: 50,
-    width: "50%",
-    alignSelf: "center",
-    marginLeft:30,
-  },updateButtonText:{
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },buttonContainer:{
-    flexDirection: 'row',
-    marginLeft:-10,
-    marginRight:30,
-  }
 });
