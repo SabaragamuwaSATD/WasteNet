@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import {
   View,
   Text,
@@ -140,7 +141,7 @@ export default function UserRequests() {
       <View style={styles.content}>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Text>Back</Text>
+          <Ionicons name="arrow-back" size={40} color="black" />
           </TouchableOpacity>
           <View style={styles.searchBar}>
             <Feather name="search" size={20} color="#3D550C" />
