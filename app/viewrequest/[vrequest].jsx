@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 16,
-    color: "#3D550C",
+    color: "#000",
   },
   paymentList: {
     flex: 1,
