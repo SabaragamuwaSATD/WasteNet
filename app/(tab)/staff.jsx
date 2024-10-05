@@ -11,7 +11,7 @@ export default function StaffDashboard() {
     <View
       style={{
         padding: 20,
-        backgroundColor: "#BDD695",
+        backgroundColor: "#e6efc9",
         flex: 1,
       }}
     >
