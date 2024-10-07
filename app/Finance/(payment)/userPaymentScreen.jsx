@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { addDoc, collection, doc } from "firebase/firestore";
 import React, { useState } from "react";
 import {
@@ -19,6 +19,7 @@ const imageUrl =
   "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
 export default function UserPaymentScreen() {
+  const { reqId } = useLocalSearchParams();
   const logoImage = require("../../../assets/images/d.png");
   const router = useRouter();
 
@@ -63,7 +64,7 @@ export default function UserPaymentScreen() {
 
         router.push({
           pathname: "./paymentSuccess",
-          params: { id, userName, billAddress, paymentDate },
+          params: { id, userName, billAddress, paymentDate, reqId },
         });
       })
       .catch((error) => {

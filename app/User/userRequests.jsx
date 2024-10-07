@@ -10,27 +10,35 @@ import {
   Image,
   StyleSheet,
   Alert,
-  Button,
+  Touchable,
 } from "react-native";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 import { useUser } from "@clerk/clerk-react";
+// import UserPaymentScreen from "../Finance/(payment)/userPaymentScreen";
 
 const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
 const paymentImg = require("../../assets/images/payment-check.png");
 
-const RequestItem = ({ id, name, date, area }) => {
-  const formattedDate = new Date(date).toLocaleString("en-US", {
-    year: "numeric",
-    month: "2-digit",
+const RequestItem = ({ id, name, date, area, paymentStatus }) => {
+  const router = useRouter();
+
+  const options = {
     day: "2-digit",
+    month: "long",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
+    timeZone: "Asia/Kolkata", // UTC+5:30
     hour12: false,
-  });
+  };
+
+  const formattedDate = new Date(date.seconds * 1000)
+    .toLocaleString("en-US", options)
+    .replace(",", " at");
 
   return (
     <View style={styles.paymentItem}>
@@ -39,17 +47,30 @@ const RequestItem = ({ id, name, date, area }) => {
         <Text style={styles.paymentText}>Name - {name}</Text>
         <Text style={styles.paymentText}>Date - {formattedDate}</Text>
         <Text style={styles.paymentText}>Area - {area}</Text>
-       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Update</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.UpdateButton}>
-          <Text style={styles.updateButtonText}>Delete</Text>
-        </TouchableOpacity>
-        
-        </View> 
+        <Text
+          style={[
+            styles.paymentText,
+            paymentStatus === "pending" && { color: "red" },
+          ]}
+        >
+          Payment Status - {paymentStatus}
+        </Text>
       </View>
-      <Image source={paymentImg} style={styles.avatar} />
+      {paymentStatus === "pending" && (
+        <View tyle={styles.payButtonView}>
+          <TouchableOpacity
+            style={styles.payButton}
+            onPress={() =>
+              router.push({
+                pathname: "../Finance/(payment)/userPaymentScreen",
+                params: { reqId: id },
+              })
+            }
+          >
+            <Text style={styles.payButtonText}>Pay</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -71,6 +92,7 @@ export default function UserRequests() {
         const requests = requestSnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
+          date: doc.data().date.toDate(),
         }));
 
         const filteredRequests = requests.filter(
@@ -79,14 +101,14 @@ export default function UserRequests() {
 
         setRequestList(filteredRequests);
       } catch (error) {
-        console.error("Error fetching payments", error);
+        console.error("Error fetching Requests", error);
       }
     };
     fetchRequets();
   }, [user.fullName]);
 
-    const createAndDownloadPDF = async () => {
-      const htmlContent = `
+  const createAndDownloadPDF = async () => {
+    const htmlContent = `
       <html>
         <head>
           <style>
@@ -109,22 +131,32 @@ export default function UserRequests() {
           <h1>Payment Records</h1>
           <table>
             <tr>
-              <th>Payment Id</th>
-              <th>Payee Name</th>
-              <th>Bill Address</th>
+              <th>Request ID</th>
               <th>Date</th>
-              <th>Amount</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Area</th>
+              <th>Location</th>
+              <th>Phone</th>
+              <th>Payment Status</th>
             </tr>
             ${requestList
               .map(
-                (request) => `
+                (requests) => `
               <tr>
-              <td>${request.id}</td>
-              <td>${request.name}</td>
-              <td>${request.area}</td>
-              <td>${request.date}</td>
-              <td>Rs. 1500</td>
-
+              <td>${requests.id}</td>
+              <td>${requests.name}</td>
+              <td>${new Date(requests.date.seconds * 1000).toLocaleString(
+                "en-US"
+                // options
+              )}</td>
+              <td>${requests.email}</td>
+              <td>${requests.area}</td>
+              <td>${requests.location.latitude}, ${
+                  requests.location.longitude
+                }</td>
+              <td>${requests.phone}</td>
+              <td>${requests.paymentStatus}</td>
               </tr>
             `
               )
@@ -134,13 +166,14 @@ export default function UserRequests() {
       </html>
     `;
 
-      try {
-        const { uri } = await Print.printToFileAsync({ html: htmlContent });
-        await Sharing.shareAsync(uri);
-      } catch (error) {
-        console.log("Error generating PDF: ", error);
-      }
-    };
+    try {
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      await Sharing.shareAsync(uri);
+    } catch (error) {
+      console.log("Error generating PDF: ", error);
+    }
+  };
+
 
   return (
     <View style={styles.container}>
@@ -278,40 +311,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 8,
   },
-  deleteButton:{
-    flexDirection: "row",
-    alignItems: "center",
+  payButtonView: {
     justifyContent: "center",
-    backgroundColor: "#FF4D4D",
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 16,
-    height: 50,
-    width: "50%",
-    alignSelf: "center",
-    marginLeft:30,
-  },deleteButtonText:{
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    // marginLeft: 8,
-  },UpdateButton:{
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#3D550C",
+  },
+  payButton: {
+    backgroundColor: "#4CAF50",
+    padding: 8,
     borderRadius: 8,
-    padding: 12,
-    marginTop: 16,
-    height: 50,
-    width: "50%",
-    alignSelf: "center",
-    marginLeft:30,
-  },updateButtonText:{
+  },
+  payButtonText: {
     color: "#FFFFFF",
-    fontWeight: "bold",
-  },buttonContainer:{
-    flexDirection: 'row',
-    marginLeft:-10,
-    marginRight:30,
-  }
+  },
+
 });

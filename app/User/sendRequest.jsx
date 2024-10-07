@@ -15,7 +15,7 @@ import MapView, { Marker } from "react-native-maps";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { addDoc, collection, doc } from "firebase/firestore";
+import { addDoc, collection, doc, Timestamp } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 import { useUser } from "@clerk/clerk-react";
 
@@ -35,6 +35,7 @@ export default function CollectRequestScreen() {
     latitude: 7.8731,
     longitude: 80.7718,
   });
+  const [paymentStatus, setPaymentStatus] = useState("pending");
 
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -63,10 +64,11 @@ export default function CollectRequestScreen() {
       id,
       name,
       email,
-      date,
+      date: Timestamp.fromDate(date),
       phone,
       area,
       location,
+      paymentStatus: paymentStatus,
     })
       .then(() => {
         console.log("Collection Request Submitted with ID: ", id);
