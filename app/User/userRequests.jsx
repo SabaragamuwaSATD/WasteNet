@@ -174,7 +174,6 @@ export default function UserRequests() {
     }
   };
 
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -292,7 +291,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 20,
-
   },
   downloadButton: {
     flexDirection: "row",
@@ -323,5 +321,4 @@ const styles = StyleSheet.create({
   payButtonText: {
     color: "#FFFFFF",
   },
-
 });
