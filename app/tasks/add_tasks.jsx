@@ -67,7 +67,7 @@ export default function AddTasks() {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#BDD695'}}>
+        <View style={{ flex: 1, backgroundColor: '#e6efc9'}}>
             <Image source={{ uri: imageUrl }}
                 style={{
                     width: '100%',

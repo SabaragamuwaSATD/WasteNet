@@ -28,6 +28,6 @@ export const Colors = {
     GRAY: '#8f8f8f',
     GREEN: '#3cb371',
     DGREEN: '#0dac2b',
-    ICON_BG: '#989C69',
+    ICON_BG: '#a4be7b',
     BTN: '#425523'
 };

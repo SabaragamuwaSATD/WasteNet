@@ -153,7 +153,7 @@ export default function ViewTasks() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#BDD695' }}>
+    <View style={{ flex: 1, backgroundColor: '#e6efc9' }}>
       {/* Header Image */}
       <Image
         source={{ uri: imageUrl }}
@@ -176,7 +176,7 @@ export default function ViewTasks() {
       <View style={{
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#a1a9a4',
+        backgroundColor: '#d4e3b5',
         padding: 10,
         marginVertical: 10,
         marginTop: 2,
