@@ -223,8 +223,9 @@ const styles = StyleSheet.create({
     color: "#3D550C",
   },
   title: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontWeight:"bold",
+    fontFamily: "outfit-bold",
     marginBottom: 16,
     color: "#000",
   },
@@ -244,7 +245,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   paymentText: {
-    color: "#4CAF50",
+    color: "#000",
+    fontFamily: "outfit",
+    fontSize: 14,
     marginBottom: 4,
   },
   avatar: {
