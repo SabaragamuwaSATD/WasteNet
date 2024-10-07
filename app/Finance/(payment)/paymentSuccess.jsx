@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -12,11 +12,36 @@ import { Svg, Path, Circle } from "react-native-svg";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
 import * as FileSystem from "expo-file-system";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../configs/FirebaseConfig";
+// import UserPaymentScreen from "./userPaymentScreen";
 
 const imageUrl =
   "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
+const router = useRouter();
+
 export default function PaymentConfirmation() {
+  const { reqId } = useLocalSearchParams();
+
+  const handlePayment = async () => {
+    // Simulate payment process
+    try {
+      // Update paymentStatus to 'paid' in Firestore
+      const requestDocRef = doc(db, "Collection Requests", reqId);
+      await updateDoc(requestDocRef, { paymentStatus: "paid" });
+
+      // Refresh the request list
+      // refreshRequests();
+
+      // Navigate to the payment success screen
+      router.push("./userPaymentScreen"); // Replace with the actual path
+    } catch (error) {
+      console.error("Error updating payment status: ", error);
+      Alert.alert("Error", "Something went wrong during the payment process.");
+    }
+  };
+
   const [logoBase64, setLogoBase64] = useState("");
   const logoImage = require("../../../assets/images/d.png");
   const { id, userName, billAddress, paymentDate } = useLocalSearchParams();
@@ -119,7 +144,7 @@ export default function PaymentConfirmation() {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handlePayment}>
           <Text style={styles.buttonText}>To Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>

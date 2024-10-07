@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Text, View } from "react-native";
 import LoginScreen from "./../components/LoginScreen";
+import home from "../app/(tab)/home";
 import * as SecureStore from "expo-secure-store";
 // import salaryDetails from "../app/Finance/salaryDetails";
 
