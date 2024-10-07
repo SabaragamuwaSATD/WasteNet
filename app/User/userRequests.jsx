@@ -55,24 +55,49 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
         >
           Payment Status - {paymentStatus}
         </Text>
-      </View>
-      {paymentStatus === "pending" && (
-        <View tyle={styles.payButtonView}>
+        {paymentStatus === "pending" && (
+          <View style={styles.payButtonView}>
+            <TouchableOpacity
+              style={styles.payButton}
+              onPress={() =>
+                router.push({
+                  pathname: "../Finance/(payment)/userPaymentScreen",
+                  params: { id },
+                })
+              }
+            >
+              <Text style={styles.payButtonText}>Pay</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        <View style={styles.buttonContainer}>
+          {paymentStatus === "pending" && (
+            <TouchableOpacity
+              style={styles.updateButton}
+              onPress={() => updateHandler(id)}
+            >
+              <Text style={styles.buttonText}>Update</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
-            style={styles.payButton}
-            onPress={() =>
-              router.push({
-                pathname: "../Finance/(payment)/userPaymentScreen",
-                params: { reqId: id },
-              })
-            }
+            style={styles.deleteButton}
+            onPress={() => deleteHandler(id)}
           >
-            <Text style={styles.payButtonText}>Pay</Text>
+            <Text style={styles.buttonText}>Delete</Text>
           </TouchableOpacity>
         </View>
-      )}
+      </View>
+      {/* <Image source={paymentImg} style={styles.avatar} /> */}
     </View>
   );
+};
+
+const updateHandler = (id) => {
+  Alert.alert("Update", `Update Request with id ${id}`);
+};
+
+const deleteHandler = (id) => {
+  Alert.alert("Update", `Delete Request with id ${id}`);
 };
 
 export default function UserRequests() {
@@ -291,6 +316,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
   },
   downloadButton: {
     flexDirection: "row",
@@ -310,15 +337,38 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   payButtonView: {
-    justifyContent: "center",
-    alignItems: "center",
+    marginTop: 10,
   },
   payButton: {
-    backgroundColor: "#4CAF50",
-    padding: 8,
-    borderRadius: 8,
+    backgroundColor: "#6775df",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
   payButtonText: {
     color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  updateButton: {
+    backgroundColor: "#4CAF50",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginRight: 10,
+  },
+  deleteButton: {
+    backgroundColor: "#FF6347",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
   },
 });
