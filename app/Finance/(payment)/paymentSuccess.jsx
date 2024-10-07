@@ -11,10 +11,8 @@ import {
 import { Svg, Path, Circle } from "react-native-svg";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
-import * as FileSystem from "expo-file-system";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../configs/FirebaseConfig";
-// import UserPaymentScreen from "./userPaymentScreen";
 
 const imageUrl =
   "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
@@ -35,7 +33,7 @@ export default function PaymentConfirmation() {
       // refreshRequests();
 
       // Navigate to the payment success screen
-      router.push("./userPaymentScreen"); // Replace with the actual path
+      router.push("../../User/UserHome"); // Replace with the actual path
     } catch (error) {
       console.error("Error updating payment status: ", error);
       Alert.alert("Error", "Something went wrong during the payment process.");
@@ -109,13 +107,6 @@ export default function PaymentConfirmation() {
   return (
     <SafeAreaView style={styles.container}>
       <Image source={{ uri: imageUrl }} style={styles.headerImage} />
-      {/* <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={{ fontSize: 15, color: "#4caf50" }}>Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Add your Payment Information</Text>
-      </View> */}
-
       <View style={styles.content}>
         <Text style={styles.title}>Payment Confirmation</Text>
         <View style={styles.card}>
