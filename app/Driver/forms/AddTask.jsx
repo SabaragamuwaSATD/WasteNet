@@ -32,7 +32,7 @@ export default function AddTask() {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: "Add New Task",
+      headerShown: false
     });
     getCategories();
   }, []);
@@ -105,146 +105,161 @@ export default function AddTask() {
     }
   };
   return (
-    <ScrollView
-      style={{
-        padding: 20,
-      }}
-    >
-      <Text
+    <View style={{
+      flex:1,
+      backgroundColor:Colors.BACKGROUND
+    }}>
+      <Image
+          source={require('../../assets/images/Form Header.jpeg')}
+          style={{
+              width: '100%',
+              height: 200,
+              resizeMode: 'cover',
+              marginTop: 0
+          }}
+      />
+      <ScrollView
         style={{
-          fontFamily: "outfit-medium",
-          fontSize: 20,
+          padding: 20,
         }}
       >
-        Add New Taks
-      </Text>
-
-      <Pressable onPress={imagePicker}>
-        {!image ? (
-          <Image
-            source={require("../../../assets/images/task.png")}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 15,
-              borderWidth: 1,
-              borderColor: Colors.GRAY,
-              backgroundColor: Colors.GRAY,
-            }}
-          />
-        ) : (
-          <Image
-            source={{ uri: image }}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 15,
-              borderWidth: 1,
-              borderColor: Colors.GRAY,
-            }}
-          />
-        )}
-      </Pressable>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Address *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("address", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Customer Name *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("customerName", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Service Category *</Text>
-        <Picker
-          style={styles.input}
-          onValueChange={(itemValue, itemIndex) => {
-            handleInputChange("category", itemValue);
-          }}
-        >
-          {categoryList.map((category, index) => (
-            <Picker.Item
-              key={index}
-              label={category.name}
-              value={category.name}
-            />
-          ))}
-        </Picker>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Task Manager's Name *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("managerName", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Contact No *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("valuePhone", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Task Date *</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="DD/MM/YYYY"
-          onChangeText={(value) => handleInputChange("valueDate", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Waste Type *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("valueWasteType", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Approximate Weight *</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="KG"
-          onChangeText={(value) => handleInputChange("valueWeight", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>About *</Text>
-        <TextInput
-          style={styles.input}
-          numberOfLines={5}
-          multiline={true}
-          placeholder="About Task"
-          onChangeText={(value) => handleInputChange("about", value)}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.button} onPress={onSubmit}>
         <Text
           style={{
-            fontFamily: "outfit",
-            textAlign: "center",
-            fontSize: 15,
+            fontFamily: "outfit-medium",
+            fontSize: 20,
           }}
         >
-          Submit
+          Add New Taks
         </Text>
-      </TouchableOpacity>
-    </ScrollView>
+
+        <Pressable onPress={imagePicker}>
+          {!image ? (
+            <Image
+              source={require("../../../assets/images/task.png")}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 15,
+                borderWidth: 1,
+                borderColor: Colors.GRAY,
+                backgroundColor: Colors.GRAY,
+              }}
+            />
+          ) : (
+            <Image
+              source={{ uri: image }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 15,
+                borderWidth: 1,
+                borderColor: Colors.GRAY,
+              }}
+            />
+          )}
+        </Pressable>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Address *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("address", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Customer Name *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("customerName", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Service Category *</Text>
+          <Picker
+            style={styles.input}
+            selectedValue={formdata.category}
+            onValueChange={(itemValue, itemIndex) => {
+              handleInputChange("category", itemValue);
+            }}
+          >
+            {categoryList.map((category, index) => (
+              <Picker.Item
+                key={index}
+                label={category.name}
+                value={category.name}
+              />
+            ))}
+          </Picker>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Task Manager's Name *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("managerName", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Contact No *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("valuePhone", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Task Date *</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="DD/MM/YYYY"
+            onChangeText={(value) => handleInputChange("valueDate", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Waste Type *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("valueWasteType", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Approximate Weight *</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="KG"
+            onChangeText={(value) => handleInputChange("valueWeight", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>About *</Text>
+          <TextInput
+            style={styles.input}
+            numberOfLines={5}
+            multiline={true}
+            placeholder="About Task"
+            onChangeText={(value) => handleInputChange("about", value)}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={onSubmit}>
+          <Text
+            style={{
+              fontFamily: "outfit",
+              textAlign: "center",
+              fontSize: 15,
+            }}
+          >
+            Submit
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 }
 
