@@ -112,7 +112,7 @@ export default function AddRoute() {
       backgroundColor:Colors.BACKGROUND
     }}>
        <Image
-            source={require('../../assets/images/Form Header.jpeg')}
+            source={require('../../../assets/images/Form Header.jpeg')}
             style={{
                 width: '100%',
                 height: 200,
