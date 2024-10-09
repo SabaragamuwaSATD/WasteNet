@@ -72,22 +72,22 @@ export default function FinanceDashboard() {
           <CategoryButton
             icon={paymentImg}
             label="Payments"
-            onPress={() => router.push("./payments")}
+            onPress={() => router.push("../Finance/payments")}
           />
           <CategoryButton
             icon={salaryImg}
             label="Salary"
-            onPress={() => router.push("./salary")}
+            onPress={() => router.push("../Finance/salary")}
           />
           <CategoryButton
             icon={ordersImg}
             label="Orders"
-            onPress={() => router.push("./orders")}
+            onPress={() => router.push("../Finance/orders")}
           />
           <CategoryButton
             icon={maintenanceImg}
             label="Maintenance"
-            onPress={() => router.push("./maintenance")}
+            onPress={() => router.push("../Finance/maintenance")}
           />
         </View>
       </ScrollView>

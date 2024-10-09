@@ -81,7 +81,7 @@ export default function home() {
             <CategoryButton
               icon={salaryImg}
               label="Finance"
-              onPress={() => router.push("../Finance/financeDashboard")}
+              onPress={() => router.push("./finance")}
             />
             <CategoryButton
               icon={ordersImg}
@@ -91,7 +91,7 @@ export default function home() {
             <CategoryButton
               icon={maintenanceImg}
               label="Driver"
-              onPress={() => router.push("../Driver/driverDashboard")}
+              onPress={() => router.push("/driver")}
             />
             <CategoryButton
               icon={maintenanceImg}
