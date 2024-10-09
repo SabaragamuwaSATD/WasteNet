@@ -33,7 +33,7 @@ export default function AddRoute() {
 
   useEffect(() => {
     navigation.setOptions({
-      headerShown: false
+      headerShown: false,
     });
     getCategories();
   }, []);
@@ -107,19 +107,21 @@ export default function AddRoute() {
   };
 
   return (
-    <View style={{
-      flex:1,
-      backgroundColor:Colors.BACKGROUND
-    }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: Colors.BACKGROUND,
+      }}
+    >
       <Image
-          source={require('../../assets/images/Form Header.jpeg')}
-          style={{
-              width: '100%',
-              height: 200,
-              resizeMode: 'cover',
-              marginTop: 0
-          }}
-        />
+        source={require("../../assets/images/Form Header.jpeg")}
+        style={{
+          width: "100%",
+          height: 200,
+          resizeMode: "cover",
+          marginTop: 0,
+        }}
+      />
       <ScrollView
         style={{
           padding: 20,
@@ -232,7 +234,9 @@ export default function AddRoute() {
           <Text style={styles.lable}>Route Manager's Name *</Text>
           <TextInput
             style={styles.input}
-            onChangeText={(value) => handleInputChange("routeManagerName", value)}
+            onChangeText={(value) =>
+              handleInputChange("routeManagerName", value)
+            }
           />
         </View>
 

@@ -5,12 +5,16 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { Colors } from "./../../constants/Colors";
 import { useRouter } from "expo-router";
 import { useAuth } from "@clerk/clerk-expo";
 import Ionicons from "@expo/vector-icons/Ionicons";
+
+// Get the screen width
+const { width } = Dimensions.get("window");
 
 export default function MenuList() {
   const { signOut } = useAuth();
@@ -25,7 +29,7 @@ export default function MenuList() {
       id: 1,
       name: "Client Requests",
       icon: require("./../../assets/images/analysis.png"),
-      path: "",
+      path: "/viewrequest/[vrequest]",
     },
     {
       id: 2,
@@ -74,22 +78,21 @@ export default function MenuList() {
   );
 
   return (
-    <View style={{ marginTop: 10, marginBottom: 100 }}>
+    <View style={{ flex: 1, padding: 10, backgroundColor: Colors.BACKGROUND }}>
       {/* Container for Category and Search Bar */}
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingHorizontal: 10,
-          marginBottom: 10,
+          marginBottom: 20,
         }}
       >
         {/* Category Label */}
         <Text
           style={{
             fontFamily: "outfit-bold",
-            fontSize: 20,
+            fontSize: 22,
           }}
         >
           Category
@@ -100,10 +103,10 @@ export default function MenuList() {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            backgroundColor: "#a1a9a4",
+            backgroundColor: "#d4e3b5",
             padding: 10,
             borderRadius: 8,
-            width: "65%", // Adjust this width to suit your design
+            width: "65%",
           }}
         >
           <Ionicons name="search" size={24} color="black" />
@@ -125,8 +128,10 @@ export default function MenuList() {
       {/* FlatList to display menu items */}
       <FlatList
         data={filteredMenuList} // Use filtered menu list
-        numColumns={2}
+        numColumns={2} // Two columns for the layout
         keyExtractor={(item) => item.id.toString()} // Add key extractor for performance
+        contentContainerStyle={{ paddingBottom: 50 }} // Space at bottom
+        columnWrapperStyle={{ justifyContent: "space-between" }} // Spread items evenly
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => onMenuClick(item)}
@@ -134,33 +139,37 @@ export default function MenuList() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              borderRadius: 18,
-              borderWidth: 1,
+              justifyContent: "center", // Center content
+              borderRadius: (width * 0.4) / 2, // Ensures a circular shape
+              width: width * 0.4, // 40% of screen width for circle size
+              height: width * 0.4, // Equal width and height for circle
               padding: 10,
-              gap: 5,
-              flex: 1,
-              margin: 10,
-              borderColor: Colors.ICON_BG,
+              marginBottom: 20, // Space between rows
               backgroundColor: Colors.ICON_BG,
+              borderWidth: 1,
+              borderColor: Colors.ICON_BG,
             }}
           >
             <Image
               source={item.icon}
               style={{
-                width: 41,
-                height: 41,
+                width: 60, // Adjust the icon size
+                height: 60, // Adjust the icon size
               }}
             />
             <Text
               style={{
                 fontFamily: "outfit-medium",
                 fontSize: 15,
+                marginTop: 10, // Space between icon and text
+                textAlign: "center",
               }}
             >
               {item.name}
             </Text>
           </TouchableOpacity>
         )}
+        showsVerticalScrollIndicator={false} // Disable vertical scrollbar
       />
     </View>
   );

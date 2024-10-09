@@ -3,7 +3,9 @@ import { useFonts } from "expo-font";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Text, View } from "react-native";
 import LoginScreen from "./../components/LoginScreen";
+import home from "../app/(tab)/home";
 import * as SecureStore from "expo-secure-store";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 // import salaryDetails from "../app/Finance/salaryDetails";
 
 const tokenCache = {
@@ -31,24 +33,28 @@ export default function RootLayout() {
     "outfit-bold": require("./../assets/fonts/Outfit-Bold.ttf"),
   });
   return (
-    <ClerkProvider
-      publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      tokenCache={tokenCache}
-    >
-      <SignedIn>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="(tab)" />
-          {/* <Stack.Screen name="salaryDetails" component={salaryDetails} /> */}
-        </Stack>
-      </SignedIn>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ClerkProvider
+        publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        tokenCache={tokenCache}
+      >
+        <SignedIn>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen name="(tab)" options={{ headerShown: false }} />
+            {/* <Stack.Screen name="Driver" options={{ headerShown: false }} />
+            <Stack.Screen name="Finance" options={{ headerShown: false }} /> */}
+            {/* <Stack.Screen name="salaryDetails" component={salaryDetails} /> */}
+          </Stack>
+        </SignedIn>
 
-      <SignedOut>
-        <LoginScreen />
-      </SignedOut>
-    </ClerkProvider>
+        <SignedOut>
+          <LoginScreen />
+        </SignedOut>
+      </ClerkProvider>
+    </GestureHandlerRootView>
   );
 }

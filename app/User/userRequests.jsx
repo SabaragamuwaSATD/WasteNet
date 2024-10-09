@@ -10,26 +10,35 @@ import {
   Image,
   StyleSheet,
   Alert,
+  Touchable,
 } from "react-native";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 import { useUser } from "@clerk/clerk-react";
+// import UserPaymentScreen from "../Finance/(payment)/userPaymentScreen";
 
 const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
 const paymentImg = require("../../assets/images/payment-check.png");
 
-const RequestItem = ({ id, name, date, area }) => {
-  const formattedDate = new Date(date).toLocaleString("en-US", {
-    year: "numeric",
-    month: "2-digit",
+const RequestItem = ({ id, name, date, area, paymentStatus }) => {
+  const router = useRouter();
+
+  const options = {
     day: "2-digit",
+    month: "long",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
+    timeZone: "Asia/Kolkata", // UTC+5:30
     hour12: false,
-  });
+  };
+
+  const formattedDate = new Date(date.seconds * 1000)
+    .toLocaleString("en-US", options)
+    .replace(",", " at");
 
   return (
     <View style={styles.paymentItem}>
@@ -38,10 +47,57 @@ const RequestItem = ({ id, name, date, area }) => {
         <Text style={styles.paymentText}>Name - {name}</Text>
         <Text style={styles.paymentText}>Date - {formattedDate}</Text>
         <Text style={styles.paymentText}>Area - {area}</Text>
+        <Text
+          style={[
+            styles.paymentText,
+            paymentStatus === "pending" && { color: "red" },
+          ]}
+        >
+          Payment Status - {paymentStatus}
+        </Text>
+        {paymentStatus === "pending" && (
+          <View style={styles.payButtonView}>
+            <TouchableOpacity
+              style={styles.payButton}
+              onPress={() =>
+                router.push({
+                  pathname: "../Finance/(payment)/userPaymentScreen",
+                  params: { id },
+                })
+              }
+            >
+              <Text style={styles.payButtonText}>Pay</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        <View style={styles.buttonContainer}>
+          {paymentStatus === "pending" && (
+            <TouchableOpacity
+              style={styles.updateButton}
+              onPress={() => updateHandler(id)}
+            >
+              <Text style={styles.buttonText}>Update</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => deleteHandler(id)}
+          >
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <Image source={paymentImg} style={styles.avatar} />
+      {/* <Image source={paymentImg} style={styles.avatar} /> */}
     </View>
   );
+};
+
+const updateHandler = (id) => {
+  Alert.alert("Update", `Update Request with id ${id}`);
+};
+
+const deleteHandler = (id) => {
+  Alert.alert("Update", `Delete Request with id ${id}`);
 };
 
 export default function UserRequests() {
@@ -61,6 +117,7 @@ export default function UserRequests() {
         const requests = requestSnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
+          date: doc.data().date.toDate(),
         }));
 
         const filteredRequests = requests.filter(
@@ -69,68 +126,78 @@ export default function UserRequests() {
 
         setRequestList(filteredRequests);
       } catch (error) {
-        console.error("Error fetching payments", error);
+        console.error("Error fetching Requests", error);
       }
     };
     fetchRequets();
   }, [user.fullName]);
 
-  //   const createAndDownloadPDF = async () => {
-  //     const htmlContent = `
-  //     <html>
-  //       <head>
-  //         <style>
-  //           body { font-family: Arial, sans-serif; padding: 20px; }
-  //           h1 { text-align: center; }
-  //           table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-  //           table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
-  //           th { background-color: #f2f2f2; }
-  //           .company-info { text-align: left; margin-bottom: 20px; }
-  //           .company-logo { width: 100px; height: auto; }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         <div class="company-info">
-  //           <h2>Wastenet PVT LTD</h2>
-  //           <p>143/1, Kaduwela, Sri Lanka, 71430</p>
-  //           <p>Phone: (123) 456-7890</p>
-  //           <p>Email: wastenet@company.com</p>
-  //         </div>
-  //         <h1>Payment Records</h1>
-  //         <table>
-  //           <tr>
-  //             <th>Payment Id</th>
-  //             <th>Payee Name</th>
-  //             <th>Bill Address</th>
-  //             <th>Date</th>
-  //             <th>Amount</th>
-  //           </tr>
-  //           ${paymentList
-  //             .map(
-  //               (payments) => `
-  //             <tr>
-  //             <td>${payments.id}</td>
-  //             <td>${payments.userName}</td>
-  //             <td>${payments.billAddress}</td>
-  //             <td>${payments.paymentDate}</td>
-  //             <td>Rs. 1500</td>
+  const createAndDownloadPDF = async () => {
+    const htmlContent = `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h1 { text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+            table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+            .company-info { text-align: left; margin-bottom: 20px; }
+            .company-logo { width: 100px; height: auto; }
+          </style>
+        </head>
+        <body>
+          <div class="company-info">
+            <h2>Wastenet PVT LTD</h2>
+            <p>143/1, Kaduwela, Sri Lanka, 71430</p>
+            <p>Phone: (123) 456-7890</p>
+            <p>Email: wastenet@company.com</p>
+          </div>
+          <h1>Payment Records</h1>
+          <table>
+            <tr>
+              <th>Request ID</th>
+              <th>Date</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Area</th>
+              <th>Location</th>
+              <th>Phone</th>
+              <th>Payment Status</th>
+            </tr>
+            ${requestList
+              .map(
+                (requests) => `
+              <tr>
+              <td>${requests.id}</td>
+              <td>${requests.name}</td>
+              <td>${new Date(requests.date.seconds * 1000).toLocaleString(
+                "en-US"
+                // options
+              )}</td>
+              <td>${requests.email}</td>
+              <td>${requests.area}</td>
+              <td>${requests.location.latitude}, ${
+                  requests.location.longitude
+                }</td>
+              <td>${requests.phone}</td>
+              <td>${requests.paymentStatus}</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </table>
+        </body>
+      </html>
+    `;
 
-  //             </tr>
-  //           `
-  //             )
-  //             .join("")}
-  //         </table>
-  //       </body>
-  //     </html>
-  //   `;
-
-  //     try {
-  //       const { uri } = await Print.printToFileAsync({ html: htmlContent });
-  //       await Sharing.shareAsync(uri);
-  //     } catch (error) {
-  //       console.log("Error generating PDF: ", error);
-  //     }
-  //   };
+    try {
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      await Sharing.shareAsync(uri);
+    } catch (error) {
+      console.log("Error generating PDF: ", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -164,12 +231,12 @@ export default function UserRequests() {
             <RequestItem key={index} {...request} />
           ))}
         </ScrollView>
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={styles.downloadButton}
           onPress={createAndDownloadPDF}
         >
           <Text style={styles.downloadText}>Download</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -249,6 +316,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
   },
   downloadButton: {
     flexDirection: "row",
@@ -266,5 +335,40 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "bold",
     marginLeft: 8,
+  },
+  payButtonView: {
+    marginTop: 10,
+  },
+  payButton: {
+    backgroundColor: "#6775df",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  payButtonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  updateButton: {
+    backgroundColor: "#4CAF50",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginRight: 10,
+  },
+  deleteButton: {
+    backgroundColor: "#FF6347",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
   },
 });

@@ -58,7 +58,7 @@ const ImageSlider = ({ itemList }: Props) => {
   }: {
     viewableItems: ViewToken[];
   }) => {
-    console.log("onViewableItemsChanged called", viewableItems);
+    // console.log("onViewableItemsChanged called", viewableItems);
     if (viewableItems.length > 0 && viewableItems[0].index !== undefined) {
       if (
         viewableItems[0].index !== null &&

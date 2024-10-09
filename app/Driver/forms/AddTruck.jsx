@@ -32,7 +32,7 @@ export default function AddTruck() {
 
   useEffect(() => {
     navigation.setOptions({
-      headerShown: false
+      headerShown: false,
     });
     getCategories();
   }, []);
@@ -106,19 +106,21 @@ export default function AddTruck() {
   };
 
   return (
-    <View style={{
-      flex:1,
-      backgroundColor:Colors.BACKGROUND
-    }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: Colors.BACKGROUND,
+      }}
+    >
       <Image
-          source={require('../../assets/images/Form Header.jpeg')}
-          style={{
-              width: '100%',
-              height: 200,
-              resizeMode: 'cover',
-              marginTop: 0
-          }}
-        />
+        source={require("../../assets/images/Form Header.jpeg")}
+        style={{
+          width: "100%",
+          height: 200,
+          resizeMode: "cover",
+          marginTop: 0,
+        }}
+      />
 
       <ScrollView
         style={{

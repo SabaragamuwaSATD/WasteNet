@@ -171,7 +171,7 @@ export default function ViewStaff() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#BDD695" }}>
+    <View style={{ flex: 1, backgroundColor: "#e6efc9" }}>
       {/* Header Image */}
       <Image
         source={{ uri: imageUrl }}
@@ -195,7 +195,7 @@ export default function ViewStaff() {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          backgroundColor: "#a1a9a4",
+          backgroundColor: "#d4e3b5",
           padding: 10,
           marginVertical: 10,
           marginTop: 2,
@@ -207,7 +207,7 @@ export default function ViewStaff() {
         <Ionicons name="search" size={24} color="black" />
         <TextInput
           placeholder="Search by Name..."
-          placeholderTextColor=""
+          placeholderTextColor="gray"
           value={searchQuery}
           onChangeText={(text) => setSearchQuery(text)}
           style={{

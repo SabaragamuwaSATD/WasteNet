@@ -10,6 +10,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import logoImage from "../../assets/images/d.png";
 import UserIntro from "../../components/Home/UserIntro";
@@ -37,73 +38,75 @@ export default function home() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Image
-              source={logoImage}
-              style={{
-                width: "70%", // Adjust the width as needed
-                height: 100, // Adjust the height as needed
-                resizeMode: "contain",
-              }}
-            />
-            {/* <Text style={styles.title}>WasteNet</Text> */}
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.header}>
+            <View style={styles.logoContainer}>
+              <Image
+                source={logoImage}
+                style={{
+                  width: "70%", // Adjust the width as needed
+                  height: 100, // Adjust the height as needed
+                  resizeMode: "contain",
+                }}
+              />
+              {/* <Text style={styles.title}>WasteNet</Text> */}
+            </View>
+            {/* <Feather name="user" size={24} color="#3D550C" /> */}
           </View>
-          {/* <Feather name="user" size={24} color="#3D550C" /> */}
-        </View>
 
-        <View style={styles.userInfo}>
-          <UserIntro />
-        </View>
+          <View style={styles.userInfo}>
+            <UserIntro />
+          </View>
 
-        <View style={styles.searchBar}>
-          <Feather name="search" size={20} color="#3D550C" />
-          <TextInput
-            placeholder="Search"
-            style={styles.searchInput}
-            placeholderTextColor="#3D550C"
-          />
-          <Feather name="mic" size={20} color="#3D550C" />
-        </View>
+          <View style={styles.searchBar}>
+            <Feather name="search" size={20} color="#3D550C" />
+            <TextInput
+              placeholder="Search"
+              style={styles.searchInput}
+              placeholderTextColor="#3D550C"
+            />
+            <Feather name="mic" size={20} color="#3D550C" />
+          </View>
 
-        <Text style={styles.categoryTitle}>Category</Text>
+          <Text style={styles.categoryTitle}>Category</Text>
 
-        <View style={styles.categoryGrid}>
-          <CategoryButton
-            icon={paymentImg}
-            label="Staff"
-            onPress={() => router.push("./staff")}
-          />
-          <CategoryButton
-            icon={salaryImg}
-            label="Finance"
-            onPress={() => router.push("../Finance/financeDashboard")}
-          />
-          <CategoryButton
-            icon={ordersImg}
-            label="User"
-            onPress={() => router.push("./orders")}
-          />
-          <CategoryButton
-            icon={maintenanceImg}
-            label="Driver"
-            onPress={() => router.push("./maintenance")}
-          />
-          <CategoryButton
-            icon={maintenanceImg}
-            label="Pay"
-            onPress={() => router.push("../Finance/userPaymentScreen")}
-          />
-          <CategoryButton
-            icon={maintenanceImg}
-            label="User Home"
-            onPress={() => router.push("../User/UserHome")}
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          <View style={styles.categoryGrid}>
+            <CategoryButton
+              icon={paymentImg}
+              label="Staff"
+              onPress={() => router.push("./staff")}
+            />
+            <CategoryButton
+              icon={salaryImg}
+              label="Finance"
+              onPress={() => router.push("./finance")}
+            />
+            <CategoryButton
+              icon={ordersImg}
+              label="User"
+              onPress={() => router.push("./orders")}
+            />
+            <CategoryButton
+              icon={maintenanceImg}
+              label="Driver"
+              onPress={() => router.push("/driver")}
+            />
+            <CategoryButton
+              icon={maintenanceImg}
+              label="Pay"
+              onPress={() => router.push("../Finance/userPaymentScreen")}
+            />
+            <CategoryButton
+              icon={maintenanceImg}
+              label="User Home"
+              onPress={() => router.push("../User/UserHome")}
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </GestureHandlerRootView>
     // <View
     //   style={{
     //     padding: 20,
