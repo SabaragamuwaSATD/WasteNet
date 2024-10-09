@@ -114,7 +114,7 @@ export default function AddRoute() {
       }}
     >
       <Image
-        source={require("../../assets/images/Form Header.jpeg")}
+        source={require("../../../assets/images/Form Header.jpeg")}
         style={{
           width: "100%",
           height: 200,
@@ -122,6 +122,7 @@ export default function AddRoute() {
           marginTop: 0,
         }}
       />
+
       <ScrollView
         style={{
           padding: 20,
