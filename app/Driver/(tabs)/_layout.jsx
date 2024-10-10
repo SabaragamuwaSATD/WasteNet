@@ -12,8 +12,8 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors.PRIMARY,
       }}
     >
-      {/* <Tabs.Screen
-        name="driverDashboard"
+      <Tabs.Screen
+        name="driver"
         options={{
           title: "Home",
           headerShown: false,
@@ -21,7 +21,7 @@ export default function TabLayout() {
             <Ionicons name="home" size={24} color={color} />
           ),
         }}
-      /> */}
+      />
       <Tabs.Screen
         name="orders"
         options={{

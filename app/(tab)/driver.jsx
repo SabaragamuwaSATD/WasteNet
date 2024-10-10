@@ -1,141 +1,108 @@
+import React from "react";
+
 import {
   View,
   Text,
-  FlatList,
-  ScrollView,
-  SafeAreaView,
-  StyleSheet,
+  TextInput,
+  TouchableOpacity,
   Image,
+  ScrollView,
+  StyleSheet,
+  SafeAreaView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import Header from "../../components/Home Driver/Header";
-import Slider from "../../components/Home Driver/Slider";
-import ServicesByCategory from "../../components/Home Driver/ServicesByCategory";
-import { TouchableOpacity } from "react-native";
-import Category from "../../components/Home Driver/Category";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import Colors from "../../constants/Colors";
+import { Feather } from "@expo/vector-icons";
+import logoImage from "../../assets/images/d.png";
+import UserIntro from "../../components/Home/UserIntro";
 import { useRouter } from "expo-router";
-import { useUser } from "@clerk/clerk-react";
 
-export default function DriverDashboard() {
-  const logoImage = require("../../assets/images/d.png");
-  const [selectedCategory, setSelectedCategory] = useState("Trucks");
+const CategoryButton = ({ icon, label, onPress }) => (
+  <TouchableOpacity style={styles.categoryButton} onPress={onPress}>
+    <View style={styles.categoryIconBackground}>
+      <Image source={icon} style={styles.categoryIcon} />
+    </View>
+    <View style={styles.categoryLabelButton}>
+      <Text style={styles.categoryLabel}>{label}</Text>
+    </View>
+  </TouchableOpacity>
+);
 
+const truckImg = require("../../assets/images/garbage-truck.png");
+const routeImg = require("../../assets/images/route.png");
+const taskImg = require("../../assets/images/task1.png");
+const maintenanceImg = require("../../assets/images/receipt.png");
+
+export default function FinanceDashboard() {
   const router = useRouter();
-  const user = useUser();
-
-  const handleButtonPress = () => {
-    if (selectedCategory === "Trucks") {
-      router.push("../Driver/forms/AddTruck");
-    } else if (selectedCategory === "Routes") {
-      router.push("../Driver/forms/AddRoute");
-    } else if (selectedCategory === "Tasks") {
-      router.push("../Driver/forms/AddTask");
-    }
-  };
-
-  const renderButtonLabe = () => {
-    if (selectedCategory === "Trucks") {
-      return "Add new Truck";
-    } else if (selectedCategory === "Routes") {
-      return "Add new Route";
-    } else if (selectedCategory === "Tasks") {
-      return "Add new Task";
-    } else {
-      return `Add new ${selectedCategory}`;
-    }
-  };
 
   return (
-    <View
-      style={{
-        padding: 20,
-        marginTop: 20,
-        flex: 1,
-        backgroundColor: Colors.BACKGROUND,
-      }}
-    >
-      <ScrollView>
-        <View>
-          {/* Header */}
-          <View style={styles.header}>
-            <View style={styles.logoContainer}>
-              <Image
-                source={logoImage}
-                style={{
-                  width: "70%", // Adjust the width as needed
-                  height: 100, // Adjust the height as needed
-                  resizeMode: "contain",
-                }}
-              />
-              {/* <Text style={styles.title}>WasteNet</Text> */}
-            </View>
-            <View
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.header}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={logoImage}
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 5,
-                marginTop: 10,
+                width: "70%", // Adjust the width as needed
+                height: 100, // Adjust the height as needed
+                resizeMode: "contain",
               }}
-            >
-              <Image
-                source={{ uri: user?.imageUrl }}
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 99,
-                }}
-              />
-            </View>
-            {/* <Feather name="user" size={24} color="#3D550C" /> */}
+            />
+            {/* <Text style={styles.title}>WasteNet</Text> */}
           </View>
-
-          {/* Slider */}
-          <Slider />
-
-          {/* category selection */}
-          <Category category={(name) => setSelectedCategory(name)} />
-
-          {/*List of Services + Category */}
-          <ServicesByCategory selectedCategory={selectedCategory} />
+          {/* <Feather name="user" size={24} color="#3D550C" /> */}
         </View>
 
-        {/* Add new Truck */}
-        <TouchableOpacity
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 20,
-            gap: 20,
-            marginTop: 20,
-            backgroundColor: Colors.LIGHT_PRIMARY,
-            borderWidth: 1,
-            borderColor: Colors.LIGHT_PRIMARY,
-            borderRadius: 15,
-            borderStyle: "dashed",
-          }}
-          onPress={handleButtonPress}
-        >
-          <Ionicons name="add-circle-sharp" size={24} color={Colors.BLACK} />
-          <Text
-            style={{
-              fontFamily: "outfit",
-              color: Colors.BLACK,
-            }}
-          >
-            {renderButtonLabe()}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.userInfo}>
+          <UserIntro />
+        </View>
+
+        <View style={styles.searchBar}>
+          <Feather name="search" size={20} color="#3D550C" />
+          <TextInput
+            placeholder="Search"
+            style={styles.searchInput}
+            placeholderTextColor="#3D550C"
+          />
+          <Feather name="mic" size={20} color="#3D550C" />
+        </View>
+
+        <Text style={styles.categoryTitle}>Category</Text>
+
+        <View style={styles.categoryGrid}>
+          <CategoryButton
+            icon={truckImg}
+            label="Trucks"
+            onPress={() => router.push("../Driver/(tabs)/driver")}
+          />
+          <CategoryButton
+            icon={routeImg}
+            label="Routes"
+            onPress={() => router.push("../Driver/(tabs)/driver")}
+          />
+          <CategoryButton
+            icon={taskImg}
+            label="Tasks"
+            onPress={() => router.push("../Driver/(tabs)/driver")}
+          />
+          <CategoryButton
+            icon={maintenanceImg}
+            label="Maintenance"
+            onPress={() => router.push("../Finance/maintenance")}
+          />
+        </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#e6efc9",
+  },
+  scrollContent: {
+    padding: 16,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -161,5 +128,74 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#3D550C",
     marginBottom: 16,
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#d4e3b5",
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginBottom: 24,
+  },
+  searchInput: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 16,
+    color: "#3D550C",
+  },
+  categoryTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#3D550C",
+    marginBottom: 16,
+  },
+  categoryGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  categoryButton: {
+    width: "48%",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  categoryIconBackground: {
+    width: 120,
+    height: 120,
+    borderRadius: 80,
+    backgroundColor: "#a4be7b",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  categoryIcon: {
+    width: 60,
+    height: 60,
+  },
+  categoryLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#fff",
+    textAlign: "center",
+  },
+  userInfo: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  categoryLabelButton: {
+    backgroundColor: "#a4be7b",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#3D550C",
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 16,
+    width: 130, // Set the desired width
+    height: 50,
   },
 });

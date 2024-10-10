@@ -16,6 +16,7 @@ import { db, storage } from "../../../configs/FirebaseConfig";
 import { TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import driver from '../../(tab)/driver'
 
 export default function AddTruck() {
   const navigation = useNavigation();
@@ -78,7 +79,7 @@ export default function AddTruck() {
         });
       });
 
-    router.push("/driverDashboard");
+    router.push("../../(tab)/driver");
   };
 
   const saveFormData = async (imageUrl) => {
@@ -183,7 +184,7 @@ export default function AddTruck() {
           <Text style={styles.lable}>Service Category *</Text>
           <Picker
             style={styles.input}
-            selectedValue={formdata.category}
+            // selectedValue={formdata.category}
             onValueChange={(itemValue, itemIndex) => {
               handleInputChange("category", itemValue);
             }}

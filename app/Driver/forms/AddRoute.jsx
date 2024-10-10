@@ -79,7 +79,7 @@ export default function AddRoute() {
         });
       });
 
-    router.push("../(tabs)/driverDashboard");
+    router.push("../../(tab)/driver");
   };
 
   const saveFormData = async (imageUrl) => {
@@ -184,7 +184,7 @@ export default function AddRoute() {
           <Text style={styles.lable}>Service Category *</Text>
           <Picker
             style={styles.input}
-            selectedValue={formdata.category}
+            // selectedValue={formdata.category}
             onValueChange={(itemValue, itemIndex) => {
               handleInputChange("category", itemValue);
             }}
