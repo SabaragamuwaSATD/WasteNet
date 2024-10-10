@@ -7,6 +7,7 @@ import home from "../app/(tab)/home";
 import * as SecureStore from "expo-secure-store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 // import salaryDetails from "../app/Finance/salaryDetails";
+import UserHome from "../app/User/UserHome";
 
 const tokenCache = {
   async getToken(key) {
@@ -45,6 +46,7 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name="(tab)" options={{ headerShown: false }} />
+            <Stack.Screen name="UserHome" options={{ headerShown: false }} />
             {/* <Stack.Screen name="Driver" options={{ headerShown: false }} />
             <Stack.Screen name="Finance" options={{ headerShown: false }} /> */}
             {/* <Stack.Screen name="salaryDetails" component={salaryDetails} /> */}

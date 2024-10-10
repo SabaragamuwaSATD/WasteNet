@@ -62,7 +62,7 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
               onPress={() =>
                 router.push({
                   pathname: "../Finance/(payment)/userPaymentScreen",
-                  params: { id },
+                  params: { reqId: id },
                 })
               }
             >

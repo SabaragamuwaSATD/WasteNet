@@ -18,11 +18,14 @@ import { db } from "../../../configs/FirebaseConfig";
 const imageUrl =
   "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
-const router = useRouter();
-
 export default function PaymentConfirmation() {
-  const { reqId } = useLocalSearchParams();
-  console.log("Request ID: ", reqId);
+
+  const [logoBase64, setLogoBase64] = useState("");
+  const logoImage = require("../../../assets/images/d.png");
+  const { id, userName, billAddress, paymentDate, reqId } =
+    useLocalSearchParams();
+  console.log(reqId);
+  const router = useRouter();
 
   const handlePayment = async () => {
     if (!reqId) {
@@ -45,10 +48,6 @@ export default function PaymentConfirmation() {
       Alert.alert("Error", "Something went wrong during the payment process.");
     }
   };
-
-  const [logoBase64, setLogoBase64] = useState("");
-  const logoImage = require("../../../assets/images/d.png");
-  const { id, userName, billAddress, paymentDate } = useLocalSearchParams();
 
   const formattedDate = new Date(paymentDate).toLocaleString("en-US", {
     year: "numeric",
