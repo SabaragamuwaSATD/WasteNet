@@ -60,6 +60,7 @@ export default function UserPaymentScreen() {
           window.alert("Payment submitted successfully");
         } else {
           Alert.alert("Payment submitted successfully");
+          console.log(reqId);
         }
 
         router.push({
