@@ -7,8 +7,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  Alert,
 } from "react-native";
-import { Svg, Path, Circle } from "react-native-svg";
+import { Svg, Path } from "react-native-svg";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
 import { doc, updateDoc } from "firebase/firestore";
@@ -21,8 +22,13 @@ const router = useRouter();
 
 export default function PaymentConfirmation() {
   const { reqId } = useLocalSearchParams();
+  console.log("Request ID: ", reqId);
 
   const handlePayment = async () => {
+    if (!reqId) {
+      Alert.alert("Error", "Request ID is missing.");
+      return;
+    }
     // Simulate payment process
     try {
       // Update paymentStatus to 'paid' in Firestore

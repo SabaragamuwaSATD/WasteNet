@@ -1,5 +1,5 @@
 import { View, Text, Image, Dimensions } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
 export default function Slider() {
@@ -8,6 +8,30 @@ export default function Slider() {
     { id: 2, image: require("../../assets/images/slider2.jpeg") },
     { id: 3, image: require("../../assets/images/slider3.jpeg") },
   ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const flatListRef = useRef(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === sliderList.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToIndex({
+        index: currentIndex,
+        animated: true,
+      });
+    }
+  }, [currentIndex]);
+
   return (
     <View
       style={{
@@ -15,6 +39,7 @@ export default function Slider() {
       }}
     >
       <FlatList
+        ref={flatListRef}
         data={sliderList}
         horizontal={true}
         renderItem={({ item }) => (
@@ -30,6 +55,9 @@ export default function Slider() {
             />
           </View>
         )}
+        keyExtractor={(item) => item.id.toString()}
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled={true}
       />
     </View>
   );

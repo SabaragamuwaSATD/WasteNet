@@ -33,7 +33,7 @@ export default function AddRoute() {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: "Add New Route",
+      headerShown: false,
     });
     getCategories();
   }, []);
@@ -107,133 +107,153 @@ export default function AddRoute() {
   };
 
   return (
-    <ScrollView
+    <View
       style={{
-        padding: 20,
+        flex: 1,
+        backgroundColor: Colors.BACKGROUND,
       }}
     >
-      <Text
+      <Image
+        source={require("../../../assets/images/Form Header.jpeg")}
         style={{
-          fontFamily: "outfit-medium",
-          fontSize: 20,
+          width: "100%",
+          height: 200,
+          resizeMode: "cover",
+          marginTop: 0,
+        }}
+      />
+
+      <ScrollView
+        style={{
+          padding: 20,
         }}
       >
-        Add New Route
-      </Text>
-
-      <Pressable onPress={imagePicker}>
-        {!image ? (
-          <Image
-            source={require("../../../assets/images/routes.png")}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 15,
-              borderWidth: 1,
-              borderColor: Colors.GRAY,
-              backgroundColor: Colors.GRAY,
-            }}
-          />
-        ) : (
-          <Image
-            source={{ uri: image }}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 15,
-              borderWidth: 1,
-              borderColor: Colors.GRAY,
-            }}
-          />
-        )}
-      </Pressable>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Starting area - Ending area *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("name", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>District *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("make", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Service Category *</Text>
-        <Picker
-          style={styles.input}
-          onValueChange={(itemValue, itemIndex) => {
-            handleInputChange("category", itemValue);
-          }}
-        >
-          {categoryList.map((category, index) => (
-            <Picker.Item
-              key={index}
-              label={category.name}
-              value={category.name}
-            />
-          ))}
-        </Picker>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Driver Name *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("valueDriver", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Contact No *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("valueContact", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Service Dates *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("dates", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Vehicle No *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("valueVehicleNo", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Route Manager's Name *</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => handleInputChange("routeManagerName", value)}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.button} onPress={onSubmit}>
         <Text
           style={{
-            fontFamily: "outfit",
-            textAlign: "center",
-            fontSize: 15,
+            fontFamily: "outfit-medium",
+            fontSize: 20,
           }}
         >
-          Submit
+          Add New Route
         </Text>
-      </TouchableOpacity>
-    </ScrollView>
+
+        <Pressable onPress={imagePicker}>
+          {!image ? (
+            <Image
+              source={require("../../../assets/images/routes.png")}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 15,
+                borderWidth: 1,
+                borderColor: Colors.GRAY,
+                backgroundColor: Colors.GRAY,
+              }}
+            />
+          ) : (
+            <Image
+              source={{ uri: image }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 15,
+                borderWidth: 1,
+                borderColor: Colors.GRAY,
+              }}
+            />
+          )}
+        </Pressable>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Starting area - Ending area *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("name", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>District *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("make", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Service Category *</Text>
+          <Picker
+            style={styles.input}
+            selectedValue={formdata.category}
+            onValueChange={(itemValue, itemIndex) => {
+              handleInputChange("category", itemValue);
+            }}
+          >
+            {categoryList.map((category, index) => (
+              <Picker.Item
+                key={index}
+                label={category.name}
+                value={category.name}
+              />
+            ))}
+          </Picker>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Driver Name *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("valueDriver", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Contact No *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("valueContact", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Service Dates *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("dates", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Vehicle No *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange("valueVehicleNo", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Route Manager's Name *</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) =>
+              handleInputChange("routeManagerName", value)
+            }
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={onSubmit}>
+          <Text
+            style={{
+              fontFamily: "outfit",
+              textAlign: "center",
+              fontSize: 15,
+            }}
+          >
+            Submit
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 }
 
