@@ -33,8 +33,10 @@ export default function UserPaymentScreen() {
     if (!userName || !billAddress || !cardNumber || !expireDate || !cvc) {
       if (Platform.OS === "web") {
         window.alert("Please fill all the fields before submitting");
+        console.log("Request ID: ", reqId);
       } else {
         Alert.alert("Please fill all the fields before submitting");
+        console.log("Request ID: ", reqId);
       }
       return;
     }
@@ -55,6 +57,7 @@ export default function UserPaymentScreen() {
     })
       .then(() => {
         console.log("Data submitted successfully");
+        console.log("Request ID: ", reqId);
 
         if (Platform.OS === "web") {
           window.alert("Payment submitted successfully");

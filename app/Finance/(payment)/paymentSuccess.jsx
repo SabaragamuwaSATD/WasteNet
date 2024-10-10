@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import { Svg, Path, Circle } from "react-native-svg";
+import { Svg, Path } from "react-native-svg";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
 import { doc, updateDoc } from "firebase/firestore";
@@ -19,15 +19,19 @@ const imageUrl =
   "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
 export default function PaymentConfirmation() {
+
   const [logoBase64, setLogoBase64] = useState("");
   const logoImage = require("../../../assets/images/d.png");
   const { id, userName, billAddress, paymentDate, reqId } =
     useLocalSearchParams();
   console.log(reqId);
-  // const { reqId } = useLocalSearchParams();
   const router = useRouter();
 
   const handlePayment = async () => {
+    if (!reqId) {
+      Alert.alert("Error", "Request ID is missing.");
+      return;
+    }
     // Simulate payment process
     try {
       // Update paymentStatus to 'paid' in Firestore
