@@ -78,7 +78,7 @@ export default function AddTruck() {
         });
       });
 
-    router.push("/driverDashboard");
+    router.push("/driver");
   };
 
   const saveFormData = async (imageUrl) => {

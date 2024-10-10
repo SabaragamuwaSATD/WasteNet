@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import Colors from "../../constants/Colors";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
+import DriverDashboard from "../../app/(tab)/driver";
 
 const DeleteButton = ({ service }) => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const DeleteButton = ({ service }) => {
   const handleDelete = () => {
     if (service) {
       deleteService(service.id); // Call your delete function with the service id
-      router.push("/Driver/driverDashboard");
+      router.push("../../app/(tab)/driver");
     }
   };
 
