@@ -32,7 +32,7 @@ const CategoryButton = ({ icon, label, onPress }) => (
 const paymentImg = require("../../assets/images/growth.png");
 const salaryImg = require("../../assets/images/salary.png");
 const ordersImg = require("../../assets/images/cargo.png");
-const maintenanceImg = require("../../assets/images/cargo.png");
+//const maintenanceImg = require("../../assets/images/cargo.png");
 
 export default function UserHome() {
   const logoImage = require("../../assets/images/d.png");
@@ -112,11 +112,7 @@ export default function UserHome() {
             label="My Requets"
             onPress={() => router.push("./userRequests")}
           />
-          <CategoryButton
-            icon={maintenanceImg}
-            label="Reports"
-            onPress={() => router.push("./maintenance")}
-          />
+          
         </View>
       </ScrollView>
     </SafeAreaView>
