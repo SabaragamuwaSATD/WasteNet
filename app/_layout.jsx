@@ -46,10 +46,6 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name="(tab)" options={{ headerShown: false }} />
-            <Stack.Screen name="UserHome" options={{ headerShown: false }} />
-            {/* <Stack.Screen name="Driver" options={{ headerShown: false }} />
-            <Stack.Screen name="Finance" options={{ headerShown: false }} /> */}
-            {/* <Stack.Screen name="salaryDetails" component={salaryDetails} /> */}
           </Stack>
         </SignedIn>
 
