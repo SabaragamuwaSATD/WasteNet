@@ -165,7 +165,7 @@ export default function AddRoute() {
         </Pressable>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Starting area - Ending area *</Text>
+          <Text style={styles.lable}>Starting area - Ending area</Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("name", value)}
@@ -173,7 +173,7 @@ export default function AddRoute() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>District *</Text>
+          <Text style={styles.lable}>District</Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("make", value)}
@@ -181,7 +181,7 @@ export default function AddRoute() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Service Category *</Text>
+          <Text style={styles.lable}>Service Category</Text>
           <Picker
             style={styles.input}
             // selectedValue={formdata.category}
@@ -200,7 +200,7 @@ export default function AddRoute() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Driver Name *</Text>
+          <Text style={styles.lable}>Driver Name</Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("valueDriver", value)}
@@ -208,7 +208,7 @@ export default function AddRoute() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Contact No *</Text>
+          <Text style={styles.lable}>Contact No</Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("valueContact", value)}
@@ -216,7 +216,7 @@ export default function AddRoute() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Service Dates *</Text>
+          <Text style={styles.lable}>Service Dates</Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("dates", value)}
@@ -224,7 +224,7 @@ export default function AddRoute() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Vehicle No *</Text>
+          <Text style={styles.lable}>Vehicle No</Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("valueVehicleNo", value)}
@@ -232,7 +232,7 @@ export default function AddRoute() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Route Manager's Name *</Text>
+          <Text style={styles.lable}>Route Manager's Name</Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) =>

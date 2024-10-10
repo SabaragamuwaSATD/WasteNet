@@ -66,95 +66,110 @@ export default function UpdateRoute() {
   }
 
   return (
-    <ScrollView
-      style={{
-        padding: 20,
-      }}
-    >
-      <Text
+    <View style={{
+      flex:1,
+      backgroundColor:Colors.BACKGROUND
+    }}>
+      <Image
+        source={require("../../../assets/images/Form Header.jpeg")}
         style={{
-          fontFamily: "outfit-medium",
-          fontSize: 20,
+          width: "100%",
+          height: 200,
+          resizeMode: "cover",
+          marginTop: 0,
+        }}
+      />
+
+      <ScrollView
+        style={{
+          padding: 20,
         }}
       >
-        Update Route
-      </Text>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Starting area - Ending area *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.name || ""}
-          onChangeText={(value) => handleInputChange("name", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>District *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.make || ""}
-          onChangeText={(value) => handleInputChange("make", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Driver Name *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.valueDriver || ""}
-          onChangeText={(value) => handleInputChange("valueDriver", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Contact No *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.valueContact || ""}
-          onChangeText={(value) => handleInputChange("valueContact", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Service Dates *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.dates || ""}
-          onChangeText={(value) => handleInputChange("dates", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Vehicle No *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.valueVehicleNo || ""}
-          onChangeText={(value) => handleInputChange("valueVehicleNo", value)}
-        />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Route Manager's Name *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.routeManagerName || ""}
-          onChangeText={(value) => handleInputChange("routeManagerName", value)}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.button} onPress={onSubmit}>
         <Text
           style={{
-            fontFamily: "outfit",
-            textAlign: "center",
-            fontSize: 15,
+            fontFamily: "outfit-medium",
+            fontSize: 20,
           }}
         >
-          Submit
+          Update Route
         </Text>
-      </TouchableOpacity>
-    </ScrollView>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Starting area - Ending area </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.name || ""}
+            onChangeText={(value) => handleInputChange("name", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>District </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.make || ""}
+            onChangeText={(value) => handleInputChange("make", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Driver Name </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.valueDriver || ""}
+            onChangeText={(value) => handleInputChange("valueDriver", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Contact No </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.valueContact || ""}
+            onChangeText={(value) => handleInputChange("valueContact", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Service Dates </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.dates || ""}
+            onChangeText={(value) => handleInputChange("dates", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Vehicle No </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.valueVehicleNo || ""}
+            onChangeText={(value) => handleInputChange("valueVehicleNo", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Route Manager's Name </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.routeManagerName || ""}
+            onChangeText={(value) => handleInputChange("routeManagerName", value)}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={onSubmit}>
+          <Text
+            style={{
+              fontFamily: "outfit",
+              textAlign: "center",
+              fontSize: 15,
+            }}
+          >
+            Submit
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 }
 

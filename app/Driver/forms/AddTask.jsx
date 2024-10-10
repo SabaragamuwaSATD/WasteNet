@@ -163,7 +163,7 @@ export default function AddTask() {
         </Pressable>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Address *</Text>
+          <Text style={styles.lable}>Address </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("address", value)}
@@ -171,7 +171,7 @@ export default function AddTask() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Customer Name *</Text>
+          <Text style={styles.lable}>Customer Name </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("customerName", value)}
@@ -179,7 +179,7 @@ export default function AddTask() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Service Category *</Text>
+          <Text style={styles.lable}>Service Category </Text>
           <Picker
             style={styles.input}
             // selectedValue={formdata.category}
@@ -198,7 +198,7 @@ export default function AddTask() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Task Manager's Name *</Text>
+          <Text style={styles.lable}>Task Manager's Name </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("managerName", value)}
@@ -206,7 +206,7 @@ export default function AddTask() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Contact No *</Text>
+          <Text style={styles.lable}>Contact No </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("valuePhone", value)}
@@ -214,7 +214,7 @@ export default function AddTask() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Task Date *</Text>
+          <Text style={styles.lable}>Task Date </Text>
           <TextInput
             style={styles.input}
             placeholder="DD/MM/YYYY"
@@ -223,7 +223,7 @@ export default function AddTask() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Waste Type *</Text>
+          <Text style={styles.lable}>Waste Type </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("valueWasteType", value)}
@@ -231,7 +231,7 @@ export default function AddTask() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Approximate Weight *</Text>
+          <Text style={styles.lable}>Approximate Weight </Text>
           <TextInput
             style={styles.input}
             placeholder="KG"
@@ -240,7 +240,7 @@ export default function AddTask() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>About *</Text>
+          <Text style={styles.lable}>About </Text>
           <TextInput
             style={styles.input}
             numberOfLines={5}

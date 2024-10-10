@@ -30,7 +30,9 @@ const CategoryButton = ({ icon, label, onPress }) => (
 const paymentImg = require("../../assets/images/growth.png");
 const salaryImg = require("../../assets/images/salary.png");
 const ordersImg = require("../../assets/images/cargo.png");
-const maintenanceImg = require("../../assets/images/cargo.png");
+const maintenanceImg = require("../../assets/images/driver.png");
+const payImg = require("../../assets/images/payment.png");
+const userImg = require("../../assets/images/user.png");
 
 export default function home() {
   const logoImage = require("../../assets/images/d.png");
@@ -94,12 +96,12 @@ export default function home() {
               onPress={() => router.push("/driver")}
             />
             <CategoryButton
-              icon={maintenanceImg}
+              icon={payImg}
               label="Pay"
               onPress={() => router.push("../Finance/userPaymentScreen")}
             />
             <CategoryButton
-              icon={maintenanceImg}
+              icon={userImg}
               label="User Home"
               onPress={() => router.push("../User/UserHome")}
             />

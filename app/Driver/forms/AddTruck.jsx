@@ -165,7 +165,7 @@ export default function AddTruck() {
         </Pressable>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Truck Name *</Text>
+          <Text style={styles.lable}>Truck Name </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("name", value)}
@@ -173,7 +173,7 @@ export default function AddTruck() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Truck Make *</Text>
+          <Text style={styles.lable}>Truck Make </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("make", value)}
@@ -181,7 +181,7 @@ export default function AddTruck() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Service Category *</Text>
+          <Text style={styles.lable}>Service Category </Text>
           <Picker
             style={styles.input}
             // selectedValue={formdata.category}
@@ -200,7 +200,7 @@ export default function AddTruck() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Driver Name *</Text>
+          <Text style={styles.lable}>Driver Name </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("driverName", value)}
@@ -208,7 +208,7 @@ export default function AddTruck() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Fuel Type *</Text>
+          <Text style={styles.lable}>Fuel Type </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("fuel", value)}
@@ -216,7 +216,7 @@ export default function AddTruck() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Engine Power *</Text>
+          <Text style={styles.lable}>Engine Power </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("power", value)}
@@ -224,7 +224,7 @@ export default function AddTruck() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>Curb Weight *</Text>
+          <Text style={styles.lable}>Curb Weight </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("curbWeight", value)}
@@ -232,7 +232,7 @@ export default function AddTruck() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>No Of Passengers *</Text>
+          <Text style={styles.lable}>No Of Passengers </Text>
           <TextInput
             style={styles.input}
             onChangeText={(value) => handleInputChange("passengers", value)}
@@ -240,7 +240,7 @@ export default function AddTruck() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.lable}>About *</Text>
+          <Text style={styles.lable}>About </Text>
           <TextInput
             style={styles.input}
             numberOfLines={5}

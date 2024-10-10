@@ -4,6 +4,7 @@ import Category from "./Category";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 import ListItem from "./ListItem";
+import Colors from "../../constants/Colors";
 
 export default function ServicesByCategory({ selectedCategory }) {
   const [serviceList, setServiceList] = useState([]);

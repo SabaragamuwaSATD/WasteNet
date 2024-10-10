@@ -14,6 +14,8 @@ const UpdateButton = ({ service }) => {
       router.push(`/Driver/forms/UpdateRoute?id=${service.id}`);
     } else if (service?.category === "Tasks") {
       router.push(`/Driver/forms/UpdateTask?id=${service.id}`);
+    } else if (service?.category === "Maintenance"){
+      router.push(`/Driver/forms/UpdateMaintenance?id=${service.id}`);
     }
   };
 
@@ -43,6 +45,8 @@ const UpdateButton = ({ service }) => {
             ? "Update Route"
             : service?.category === "Tasks"
             ? "Update Task"
+            : service?.category === "Maintenance"
+            ? "Update Maintenance"
             : "Update"}
         </Text>
       </TouchableOpacity>

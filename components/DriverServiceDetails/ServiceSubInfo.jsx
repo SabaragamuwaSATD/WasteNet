@@ -13,14 +13,14 @@ export default function ServiceSubInfo({ service }) {
             }}>
                 <ServiceSubInfoCard
                     icon={service?.passengerImage || service?.imageDate}
-                    title={service?.titlePassenger || service?.titleDate || service?.titleServiceDays}
-                    value={service?.passengers || service?.valueDate || service?.dates}
+                    title={service?.titlePassenger || service?.titleDate || service?.titleServiceDays || service?.titleName}
+                    value={service?.passengers || service?.valueDate || service?.dates || service?.name}
                 />
 
                 <ServiceSubInfoCard
                     icon={service?.weightImage || service?.imagePhone || service?.imageVehicle}
-                    title={service?.titleWeight || service?.titlePhone || service?.titleVehicleNo}
-                    value={service?.curbWeight || service?.valuePhone || service?.valueVehicleNo}
+                    title={service?.titleWeight || service?.titlePhone || service?.titleVehicleNo || service?.titleMake}
+                    value={service?.curbWeight || service?.valuePhone || service?.valueVehicleNo || service?.make}
                 />
             </View>
 
@@ -30,14 +30,14 @@ export default function ServiceSubInfo({ service }) {
             }}>
                 <ServiceSubInfoCard
                     icon={service?.fuelImage || service?.imageWaste || service?.imageDriver}
-                    title={service?.titleFuelType || service?.titleWasteType || service?.titleDriver}
-                    value={service?.fuel || service?.valueWasteType || service?.valueDriver}
+                    title={service?.titleFuelType || service?.titleWasteType || service?.titleDriver || service?.titleQuantity}
+                    value={service?.fuel || service?.valueWasteType || service?.valueDriver || service?.quantity}
                 />
 
                 <ServiceSubInfoCard
                     icon={service?.powerImage || service?.imageWasteWeight || service?.imageContact}
-                    title={service?.titlePower || service?.titleWasteWeight || service?.titleContact}
-                    value={service?.power || service?.valueWeight || service?.valueContact}
+                    title={service?.titlePower || service?.titleWasteWeight || service?.titleContact || service?.titlePart}
+                    value={service?.power || service?.valueWeight || service?.valueContact || service?.vehiclePart}
                 />
             </View>
         </View>

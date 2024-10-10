@@ -41,8 +41,12 @@ export default function ServiceDetails() {
         {/* about */}
         <AboutService service={service} />
 
-        {/* owner details */}
-        <ContactInfo service={service} />
+        {/* Only show ContactInfo if the category is not "Maintenance" */}
+        {service?.category !== "Maintenance" && (
+
+          <ContactInfo service={service} />
+          
+        )}
 
         {/* <UpdateButton selectedCategory={service?.category}/> */}
 

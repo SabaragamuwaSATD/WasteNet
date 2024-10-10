@@ -79,101 +79,117 @@ export default function UpdateTruck() {
   }
 
   return (
-    <ScrollView style={{ padding: 20 }}>
-      <Text style={{ fontFamily: "outfit-medium", fontSize: 20 }}>
-        Update Truck
-      </Text>
+    <View style={{
+      flex:1,
+      backgroundColor:Colors.BACKGROUND
+    }}>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Truck Name *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.name || ""}
-          onChangeText={(value) => handleInputChange("name", value)}
-        />
-      </View>
+      <Image
+        source={require("../../../assets/images/Form Header.jpeg")}
+        style={{
+          width: "100%",
+          height: 200,
+          resizeMode: "cover",
+          marginTop: 0,
+        }}
+      />
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Truck Make *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.make || ""}
-          onChangeText={(value) => handleInputChange("make", value)}
-        />
-      </View>
+      <ScrollView style={{ padding: 20 }}>
+        <Text style={{ fontFamily: "outfit-medium", fontSize: 20 }}>
+          Update Truck
+        </Text>
 
-      {/* <View style={styles.inputContainer}>
-                <Text style={styles.lable}>Service Category *</Text>
-                <Picker
-                    style={styles.input}
-                    onValueChange={(itemValue) => handleInputChange('category', itemValue)}
-                >
-                    {categoryList.map((category, index) => (
-                        <Picker.Item key={index} label={category.name} value={category.name} />
-                    ))}
-                </Picker>
-            </View> */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Truck Name </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.name || ""}
+            onChangeText={(value) => handleInputChange("name", value)}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Driver Name *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.driverName || ""}
-          onChangeText={(value) => handleInputChange("driverName", value)}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Truck Make </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.make || ""}
+            onChangeText={(value) => handleInputChange("make", value)}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Fuel Type *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.fuel || ""}
-          onChangeText={(value) => handleInputChange("fuel", value)}
-        />
-      </View>
+        {/* <View style={styles.inputContainer}>
+                  <Text style={styles.lable}>Service Category *</Text>
+                  <Picker
+                      style={styles.input}
+                      onValueChange={(itemValue) => handleInputChange('category', itemValue)}
+                  >
+                      {categoryList.map((category, index) => (
+                          <Picker.Item key={index} label={category.name} value={category.name} />
+                      ))}
+                  </Picker>
+              </View> */}
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Engine Power *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.power || ""}
-          onChangeText={(value) => handleInputChange("power", value)}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Driver Name </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.driverName || ""}
+            onChangeText={(value) => handleInputChange("driverName", value)}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>Curb Weight *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.curbWeight || ""}
-          onChangeText={(value) => handleInputChange("curbWeight", value)}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Fuel Type *</Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.fuel || ""}
+            onChangeText={(value) => handleInputChange("fuel", value)}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>No Of Passengers *</Text>
-        <TextInput
-          style={styles.input}
-          value={formdata.passengers || ""}
-          onChangeText={(value) => handleInputChange("passengers", value)}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Engine Power *</Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.power || ""}
+            onChangeText={(value) => handleInputChange("power", value)}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.lable}>About *</Text>
-        <TextInput
-          style={styles.input}
-          numberOfLines={5}
-          multiline={true}
-          value={formdata.about || ""}
-          onChangeText={(value) => handleInputChange("about", value)}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>Curb Weight *</Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.curbWeight || ""}
+            onChangeText={(value) => handleInputChange("curbWeight", value)}
+          />
+        </View>
 
-      <TouchableOpacity style={styles.button} onPress={onSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>No Of Passengers </Text>
+          <TextInput
+            style={styles.input}
+            value={formdata.passengers || ""}
+            onChangeText={(value) => handleInputChange("passengers", value)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.lable}>About </Text>
+          <TextInput
+            style={styles.input}
+            numberOfLines={5}
+            multiline={true}
+            value={formdata.about || ""}
+            onChangeText={(value) => handleInputChange("about", value)}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={onSubmit}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 }
 
