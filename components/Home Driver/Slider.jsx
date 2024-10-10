@@ -1,5 +1,5 @@
 import { View, Text, Image, Dimensions } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
 export default function Slider() {
