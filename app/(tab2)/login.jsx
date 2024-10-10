@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   View,
@@ -9,6 +9,7 @@ import {
   ScrollView,
   StyleSheet,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
@@ -36,6 +37,32 @@ export default function home() {
   const logoImage = require("../../assets/images/d.png");
 
   const router = useRouter();
+  const [password, setPassword] = useState("")
+
+  //Funtion to handle the admin password
+  const handleAdminPress = () => {
+    Alert.prompt(
+      "Admin Access",
+      "Please enter the password",
+      [
+        {
+          text: "Cancel",
+          style:"cancel",
+        },
+        {
+          text:"OK",
+          onPress: (enteredPassword) => {
+            if(enteredPassword === "admin123"){
+              router.push("/home")
+            } else {
+              Alert.alert("Error", "Incorrect Password!")
+            }
+          },
+        },
+      ],
+      "secure-text" //hide the enterd password
+    )
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -76,7 +103,7 @@ export default function home() {
             <CategoryButton
               icon={paymentImg}
               label="Admin"
-              onPress={() => router.push("/home")}
+              onPress={handleAdminPress}
             />
             <CategoryButton
               icon={maintenanceImg}

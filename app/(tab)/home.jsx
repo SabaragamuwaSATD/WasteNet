@@ -95,7 +95,7 @@ export default function home() {
               label="Driver"
               onPress={() => router.push("/driver")}
             />
-            <CategoryButton
+            {/* <CategoryButton
               icon={payImg}
               label="Pay"
               onPress={() => router.push("../Finance/userPaymentScreen")}
@@ -104,7 +104,7 @@ export default function home() {
               icon={userImg}
               label="User Home"
               onPress={() => router.push("../User/UserHome")}
-            />
+            /> */}
           </View>
         </ScrollView>
       </SafeAreaView>
