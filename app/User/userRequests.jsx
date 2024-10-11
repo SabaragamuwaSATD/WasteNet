@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
-import { collection, getDoc, getDocs } from "firebase/firestore";
+import { collection, getDoc, getDocs, deleteDoc, doc , updateDoc } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 import { useUser } from "@clerk/clerk-react";
 // import UserPaymentScreen from "../Finance/(payment)/userPaymentScreen";
@@ -39,6 +39,18 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
   const formattedDate = new Date(date.seconds * 1000)
     .toLocaleString("en-US", options)
     .replace(",", " at");
+
+    const handleDelete = async (id) => {
+      try {
+        await deleteDoc(doc(db, "Collection Requests", id));
+        setRequestList((prevList) => prevList.filter((request) => request.id !== id));
+        
+        Alert.alert("Success", "Request deleted successfully!");
+      } catch (error) {
+        console.log("Error deleting request: ", error);
+        Alert.alert("Error", "Error deleting request. Please try again.");
+      }
+    };
 
   return (
     <View style={styles.paymentItem}>
@@ -81,7 +93,7 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
           )}
           <TouchableOpacity
             style={styles.deleteButton}
-            onPress={() => deleteHandler(id)}
+            onPress={() => handleDelete(id)}
           >
             <Text style={styles.buttonText}>Delete</Text>
           </TouchableOpacity>
@@ -93,12 +105,12 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
 };
 
 const updateHandler = (id) => {
-  Alert.alert("Update", `Update Request with id ${id}`);
+  navigation.navigate("UpdateScreen", { reqId: id });
 };
 
-const deleteHandler = (id) => {
-  Alert.alert("Update", `Delete Request with id ${id}`);
-};
+// const deleteHandler = (id) => {
+//   Alert.alert("Delete", `Delete Request with id ${id}`);
+// };
 
 export default function UserRequests() {
   const imageUrl =
