@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { addDoc, collection, doc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,11 +14,13 @@ import {
   Platform,
 } from "react-native";
 import { db } from "../../../configs/FirebaseConfig";
+import { useUser } from "@clerk/clerk-react";
 
 const imageUrl =
   "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
 export default function UserPaymentScreen() {
+  const { user } = useUser();
   const { reqId } = useLocalSearchParams();
   const logoImage = require("../../../assets/images/d.png");
   const router = useRouter();
@@ -28,6 +30,12 @@ export default function UserPaymentScreen() {
   const [cardNumber, setCardNumber] = useState("");
   const [expireDate, setExpireDate] = useState("");
   const [cvc, setCvc] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      setUserName(user.fullName || "");
+    }
+  }, [user]);
 
   function create() {
     if (!userName || !billAddress || !cardNumber || !expireDate || !cvc) {
@@ -91,7 +99,7 @@ export default function UserPaymentScreen() {
           <Text style={styles.label}>Card Holder Name</Text>
           <TextInput
             style={styles.input}
-            placeholder="Your Name"
+            placeholder={userName || "Your Name"}
             value={userName}
             onChangeText={(userName) => setUserName(userName)}
             keyboardType="text"

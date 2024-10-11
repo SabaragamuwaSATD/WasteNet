@@ -1,7 +1,7 @@
-import { useRouter } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   View,
   Text,
@@ -14,34 +14,94 @@ import {
 } from "react-native";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
-import { collection, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 import { useUser } from "@clerk/clerk-react";
-import { Colors } from "../../constants/Colors";
+import MapView, { Marker } from "react-native-maps";
 
-const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
-const paymentImg = require("../../assets/images/payment-check.png");
+const RequestItem = ({
+  id,
+  name,
+  date,
+  area,
+  paymentStatus,
+  approvement,
+  location,
+}) => {
+  const [status, setStatus] = useState(approvement);
 
-const RequestItem = ({ id, name, date, area }) => {
-  const formattedDate = new Date(date).toLocaleString("en-US", {
-    year: "numeric",
-    month: "2-digit",
+  const handleAccept = async () => {
+    try {
+      const requestDocRef = doc(db, "Collection Requests", id);
+      await updateDoc(requestDocRef, { approvement: "approved" });
+      setStatus("approved");
+      Alert.alert("Success", "approvement status updated to approved.");
+      router.push("../(tab)/staff");
+    } catch (error) {
+      console.error("Error updating approvement status: ", error);
+      Alert.alert(
+        "Error",
+        "Error updating approvement status. Please try again."
+      );
+    }
+  };
+
+  const options = {
     day: "2-digit",
+    month: "long",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
+    timeZone: "Asia/Kolkata", // UTC+5:30
     hour12: false,
-  });
+  };
+
+  const formattedDate = new Date(date.seconds * 1000)
+    .toLocaleString("en-US", options)
+    .replace(",", " at");
 
   return (
     <View style={styles.paymentItem}>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        <Marker coordinate={location} />
+      </MapView>
       <View style={styles.paymentInfo}>
         <Text style={styles.paymentText}>Request id - {id}</Text>
         <Text style={styles.paymentText}>Name - {name}</Text>
         <Text style={styles.paymentText}>Date - {formattedDate}</Text>
         <Text style={styles.paymentText}>Area - {area}</Text>
+        <Text
+          style={[
+            styles.paymentText,
+            paymentStatus === "pending" && { color: "red" },
+          ]}
+        >
+          Payment - {paymentStatus}
+        </Text>
       </View>
-      <Image source={paymentImg} style={styles.avatar} />
+      {/* <Image source={paymentImg} style={styles.avatar} /> */}
+      {approvement === "pending" && paymentStatus === "pending" && (
+        <View style={styles.acceptView}>
+          <TouchableOpacity style={styles.acceptButton} onPress={handleAccept}>
+            <Text style={styles.acceptText}>Accept</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -65,11 +125,7 @@ export default function UserRequests() {
           id: doc.id,
         }));
 
-        const filteredRequests = requests.filter(
-          (request) => request.name === user.fullName
-        );
-
-        setRequestList(filteredRequests);
+        setRequestList(requests);
       } catch (error) {
         console.error("Error fetching payments", error);
       }
@@ -142,7 +198,7 @@ export default function UserRequests() {
       <View style={styles.content}>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={40} color="black" />
+            <Ionicons name="arrow-back" size={40} color="black" />
           </TouchableOpacity>
           <View style={styles.searchBar}>
             <Feather name="search" size={20} color="#3D550C" />
@@ -192,7 +248,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 16,
+    padding: 20,
   },
   topBar: {
     flexDirection: "row",
@@ -224,7 +280,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight:"bold",
+    fontWeight: "bold",
     fontFamily: "outfit-bold",
     marginBottom: 16,
     color: "#000",
@@ -233,13 +289,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   paymentItem: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
+  },
+  map: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 12,
   },
   paymentInfo: {
     flex: 1,
@@ -271,5 +333,19 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "bold",
     marginLeft: 8,
+  },
+  acceptView: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  acceptButton: {
+    backgroundColor: "#3D550C",
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  acceptText: {
+    color: "#fff",
+    fontFamily: "outfit",
   },
 });

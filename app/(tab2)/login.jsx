@@ -10,10 +10,11 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  Modal,
+  Button,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
-import logoImage from "../../assets/images/d.png";
 import UserIntro from "../../components/Home/UserIntro";
 import { useRouter } from "expo-router";
 
@@ -29,40 +30,27 @@ const CategoryButton = ({ icon, label, onPress }) => (
 );
 
 const paymentImg = require("../../assets/images/growth.png");
-const salaryImg = require("../../assets/images/salary.png");
-const ordersImg = require("../../assets/images/cargo.png");
 const maintenanceImg = require("../../assets/images/cargo.png");
 
 export default function home() {
   const logoImage = require("../../assets/images/d.png");
 
   const router = useRouter();
-  const [password, setPassword] = useState("")
+  const [modalVisible, setModalVisible] = useState(false);
+  const [enteredPassword, setEnteredPassword] = useState("");
 
-  //Funtion to handle the admin password
-  const handleAdminPress = () => {
-    Alert.prompt(
-      "Admin Access",
-      "Please enter the password",
-      [
-        {
-          text: "Cancel",
-          style:"cancel",
-        },
-        {
-          text:"OK",
-          onPress: (enteredPassword) => {
-            if(enteredPassword === "admin123"){
-              router.push("/home")
-            } else {
-              Alert.alert("Error", "Incorrect Password!")
-            }
-          },
-        },
-      ],
-      "secure-text" //hide the enterd password
-    )
-  }
+  // const handleAdminPress = () => {
+  //   setModalVisible(true);
+  // };
+
+  // const handlePasswordSubmit = () => {
+  //   if (enteredPassword === "admin123") {
+  //     setModalVisible(false);
+  //     router.push("/home");
+  //   } else {
+  //     Alert.alert("Error", "Incorrect Password!");
+  //   }
+  // };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -73,14 +61,12 @@ export default function home() {
               <Image
                 source={logoImage}
                 style={{
-                  width: "70%", // Adjust the width as needed
-                  height: 100, // Adjust the height as needed
+                  width: "70%",
+                  height: 100,
                   resizeMode: "contain",
                 }}
               />
-              {/* <Text style={styles.title}>WasteNet</Text> */}
             </View>
-            {/* <Feather name="user" size={24} color="#3D550C" /> */}
           </View>
 
           <View style={styles.userInfo}>
@@ -103,50 +89,54 @@ export default function home() {
             <CategoryButton
               icon={paymentImg}
               label="Admin"
-              onPress={handleAdminPress}
+              // onPress={handleAdminPress}
+              onPress={() => router.push("../(tab)/home")}
             />
             <CategoryButton
               icon={maintenanceImg}
-              label="User Home"
+              label="User"
               onPress={() => router.push("../User/UserHome")}
             />
           </View>
         </ScrollView>
+        {/* <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Admin Access</Text>
+            <TextInput
+              placeholder="Enter Password"
+              style={styles.modalInput}
+              secureTextEntry={true}
+              onChangeText={setEnteredPassword}
+              value={enteredPassword}
+            />
+            <View style={styles.modalButtons}>
+              <Button
+                title="Cancel"
+                onPress={() => setModalVisible(!modalVisible)}
+              />
+              <Button title="OK" onPress={handlePasswordSubmit} />
+            </View>
+          </View>
+        </Modal> */}
       </SafeAreaView>
     </GestureHandlerRootView>
-    // <View
-    //   style={{
-    //     padding: 20,
-    //     backgroundColor: "#BDD695",
-    //     flex: 1,
-    //   }}
-    // >
-    //   {/* Logo */}
-
-    //   <Image
-    //     source={logoImage}
-    //     style={{
-    //       width: "50%", // Adjust the width as needed
-    //       height: 100, // Adjust the height as needed
-    //       resizeMode: "contain",
-    //     }}
-    //   />
-
-    //   {/* User Info */}
-    //   <UserIntro />
-
-    //   {/* Menu List */}
-    //   <MenuList />
-    // </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#e6efc9",
+    padding: 16,
   },
   scrollContent: {
-    padding: 16,
+    flexGrow: 1,
   },
   header: {
     flexDirection: "row",
@@ -242,5 +232,40 @@ const styles = StyleSheet.create({
     marginTop: 16,
     width: 130, // Set the desired width
     height: 50,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    marginTop: "50%",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  modalInput: {
+    width: "100%",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
 });

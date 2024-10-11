@@ -36,6 +36,7 @@ export default function CollectRequestScreen() {
     longitude: 80.7718,
   });
   const [paymentStatus, setPaymentStatus] = useState("pending");
+  const [approvement, setApprovement] = useState("pending");
 
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -69,6 +70,7 @@ export default function CollectRequestScreen() {
       area,
       location,
       paymentStatus: paymentStatus,
+      approvement: approvement,
     })
       .then(() => {
         console.log("Collection Request Submitted with ID: ", id);

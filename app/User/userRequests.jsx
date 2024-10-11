@@ -11,18 +11,41 @@ import {
   StyleSheet,
   Alert,
   Touchable,
+  Modal,
+  Button,
 } from "react-native";
 import * as Sharing from "expo-sharing";
 import * as Print from "expo-print";
-import { collection, getDoc, getDocs, deleteDoc, doc , updateDoc } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 import { useUser } from "@clerk/clerk-react";
-// import UserPaymentScreen from "../Finance/(payment)/userPaymentScreen";
+import MapView, { Marker } from "react-native-maps";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-const Icon = ({ name }) => <Text style={styles.icon}>{name}</Text>;
-const paymentImg = require("../../assets/images/payment-check.png");
-
-const RequestItem = ({ id, name, date, area, paymentStatus }) => {
+const RequestItem = ({
+  id,
+  name,
+  date,
+  area,
+  approvement,
+  location,
+  paymentStatus,
+  onUpdate,
+}) => {
+  const [requestList, setRequestList] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [updatedName, setUpdatedName] = useState(name);
+  const [updatedDate, setUpdatedDate] = useState(new Date(date.seconds * 1000));
+  const [updatedArea, setUpdatedArea] = useState(area);
+  const [updatedLocation, setUpdatedLocation] = useState(location);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const router = useRouter();
 
   const options = {
@@ -39,21 +62,83 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
   const formattedDate = new Date(date.seconds * 1000)
     .toLocaleString("en-US", options)
     .replace(",", " at");
+  // Handle Delete Request..................................................................
 
-    const handleDelete = async (id) => {
-      try {
-        await deleteDoc(doc(db, "Collection Requests", id));
-        setRequestList((prevList) => prevList.filter((request) => request.id !== id));
-        
-        Alert.alert("Success", "Request deleted successfully!");
-      } catch (error) {
-        console.log("Error deleting request: ", error);
-        Alert.alert("Error", "Error deleting request. Please try again.");
-      }
+  const handleDelete = async (id) => {
+    console.log("Deleting request with id: ", id);
+    try {
+      await deleteDoc(doc(db, "Collection Requests", id));
+      setRequestList((prevList) =>
+        prevList.filter((request) => request.id !== id)
+      );
+
+      Alert.alert("Success", "Request deleted successfully!");
+      router.push("./UserHome");
+    } catch (error) {
+      console.log("Error deleting request: ", error);
+      Alert.alert("Error", "Error deleting request. Please try again.");
+    }
+  };
+
+  // Handle Update Request..................................................................
+
+  const handleUpdate = async () => {
+    const options = {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZone: "Asia/Kolkata", // UTC+5:30
+      hour12: false,
     };
+
+    try {
+      const requestDoc = doc(db, "Collection Requests", id);
+      await updateDoc(requestDoc, {
+        name: updatedName,
+        date: updatedDate,
+        area: updatedArea,
+        location: updatedLocation,
+      });
+
+      const formattedDate = new Date(updatedDate)
+        .toLocaleString("en-US", options)
+        .replace(",", " at");
+
+      onUpdate(id, {
+        name: updatedName,
+        date: formattedDate,
+        area: updatedArea,
+        location: updatedLocation,
+      });
+
+      setModalVisible(false);
+      Alert.alert("Success", "Request updated successfully!");
+    } catch (error) {
+      console.log("Error updating request: ", error);
+      Alert.alert("Error", "Error updating request. Please try again.");
+    }
+  };
+
+  const updateHandler = () => {
+    setModalVisible(true);
+  };
 
   return (
     <View style={styles.paymentItem}>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        <Marker coordinate={location} />
+      </MapView>
       <View style={styles.paymentInfo}>
         <Text style={styles.paymentText}>Request id - {id}</Text>
         <Text style={styles.paymentText}>Name - {name}</Text>
@@ -62,12 +147,12 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
         <Text
           style={[
             styles.paymentText,
-            paymentStatus === "pending" && { color: "red" },
+            approvement === "pending" && { color: "red" },
           ]}
         >
-          Payment Status - {paymentStatus}
+          Approval - {approvement}
         </Text>
-        {paymentStatus === "pending" && (
+        {approvement === "approved" && paymentStatus === "pending" && (
           <View style={styles.payButtonView}>
             <TouchableOpacity
               style={styles.payButton}
@@ -83,10 +168,10 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
           </View>
         )}
         <View style={styles.buttonContainer}>
-          {paymentStatus === "pending" && (
+          {approvement === "pending" && (
             <TouchableOpacity
               style={styles.updateButton}
-              onPress={() => updateHandler(id)}
+              onPress={updateHandler}
             >
               <Text style={styles.buttonText}>Update</Text>
             </TouchableOpacity>
@@ -99,18 +184,70 @@ const RequestItem = ({ id, name, date, area, paymentStatus }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* <Image source={paymentImg} style={styles.avatar} /> */}
+      {/* Update Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.overlay}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Update Request</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={updatedName}
+              onChangeText={setUpdatedName}
+            />
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <Text style={styles.input}>
+                {updatedDate.toLocaleString("en-US", options)}
+              </Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={updatedDate}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  setShowDatePicker(false);
+                  if (selectedDate) {
+                    setUpdatedDate(selectedDate);
+                  }
+                }}
+              />
+            )}
+            <TextInput
+              style={styles.input}
+              placeholder="Area"
+              value={updatedArea}
+              onChangeText={setUpdatedArea}
+            />
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: updatedLocation.latitude,
+                longitude: updatedLocation.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              onPress={(e) => setUpdatedLocation(e.nativeEvent.coordinate)}
+            >
+              <Marker coordinate={updatedLocation} />
+            </MapView>
+            <View style={styles.modalButtonContainer}>
+              <Button title="Cancel" onPress={() => setModalVisible(false)} />
+              <Button title="Update" onPress={handleUpdate} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
-
-const updateHandler = (id) => {
-  navigation.navigate("UpdateScreen", { reqId: id });
-};
-
-// const deleteHandler = (id) => {
-//   Alert.alert("Delete", `Delete Request with id ${id}`);
-// };
 
 export default function UserRequests() {
   const imageUrl =
@@ -129,7 +266,6 @@ export default function UserRequests() {
         const requests = requestSnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
-          date: doc.data().date.toDate(),
         }));
 
         const filteredRequests = requests.filter(
@@ -143,6 +279,14 @@ export default function UserRequests() {
     };
     fetchRequets();
   }, [user.fullName]);
+
+  const handleUpdate = (id, updatedData) => {
+    setRequestList((prevList) =>
+      prevList.map((request) =>
+        request.id === id ? { ...request, ...updatedData } : request
+      )
+    );
+  };
 
   const createAndDownloadPDF = async () => {
     const htmlContent = `
@@ -240,7 +384,7 @@ export default function UserRequests() {
           showsVerticalScrollIndicator={false}
         >
           {requestList.map((request, index) => (
-            <RequestItem key={index} {...request} />
+            <RequestItem key={index} {...request} onUpdate={handleUpdate} />
           ))}
         </ScrollView>
         <TouchableOpacity
@@ -309,13 +453,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   paymentItem: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
+  },
+  map: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 12,
   },
   paymentInfo: {
     flex: 1,
@@ -382,5 +532,52 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     fontWeight: "bold",
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: "90%",
+    backgroundColor: "#f3eaea",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "left",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    width: "100%",
+    borderRadius: 5,
+  },
+  map: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
 });

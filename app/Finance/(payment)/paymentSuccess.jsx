@@ -19,7 +19,6 @@ const imageUrl =
   "https://i.pinimg.com/236x/79/8f/a5/798fa5a60e05706361958a7d97adc4e8.jpg";
 
 export default function PaymentConfirmation() {
-
   const [logoBase64, setLogoBase64] = useState("");
   const logoImage = require("../../../assets/images/d.png");
   const { id, userName, billAddress, paymentDate, reqId } =
@@ -56,7 +55,7 @@ export default function PaymentConfirmation() {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false, // Use 24-hour format
+    hour12: false,
   });
 
   const createAndDownloadPDF = async () => {

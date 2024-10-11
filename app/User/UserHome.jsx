@@ -32,7 +32,6 @@ const CategoryButton = ({ icon, label, onPress }) => (
 const paymentImg = require("../../assets/images/growth.png");
 const salaryImg = require("../../assets/images/salary.png");
 const ordersImg = require("../../assets/images/cargo.png");
-//const maintenanceImg = require("../../assets/images/cargo.png");
 
 export default function UserHome() {
   const logoImage = require("../../assets/images/d.png");
@@ -48,12 +47,11 @@ export default function UserHome() {
             <Image
               source={logoImage}
               style={{
-                width: "70%", // Adjust the width as needed
-                height: 100, // Adjust the height as needed
+                width: "70%",
+                height: 100,
                 resizeMode: "contain",
               }}
             />
-            {/* <Text style={styles.title}>WasteNet</Text> */}
           </View>
           <View
             style={{
@@ -73,28 +71,11 @@ export default function UserHome() {
               }}
             />
           </View>
-          {/* <Feather name="user" size={24} color="#3D550C" /> */}
         </View>
-
-        {/* <View style={styles.userInfo}>
-          <UserIntro />
-        </View> */}
-
-        {/* <View style={styles.searchBar}>
-          <Feather name="search" size={20} color="#3D550C" />
-          <TextInput
-            placeholder="Search"
-            style={styles.searchInput}
-            placeholderTextColor="#3D550C"
-          />
-          <Feather name="mic" size={20} color="#3D550C" />
-        </View> */}
 
         <View style={styles.ImageSlider}>
           <ImageSlider itemList={sliderImages} />
         </View>
-
-        {/* <Text style={styles.categoryTitle}>Category</Text> */}
 
         <View style={styles.categoryGrid}>
           <CategoryButton
@@ -105,7 +86,7 @@ export default function UserHome() {
           <CategoryButton
             icon={salaryImg}
             label="Payments"
-            onPress={() => router.push("../Finance/financeDashboard")}
+            onPress={() => router.push("./userPayments")}
           />
           <CategoryButton
             icon={ordersImg}
@@ -158,7 +139,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
+    marginBottom: 1,
   },
   logoContainer: {
     flexDirection: "row",

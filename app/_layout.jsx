@@ -3,11 +3,10 @@ import { useFonts } from "expo-font";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Text, View } from "react-native";
 import LoginScreen from "./../components/LoginScreen";
-import home from "../app/(tab)/home";
+// import home from "../app/(tab)/home";
 import * as SecureStore from "expo-secure-store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-// import salaryDetails from "../app/Finance/salaryDetails";
-import UserHome from "../app/User/UserHome";
+// import home from "../app/(tab)/home";
 
 const tokenCache = {
   async getToken(key) {
@@ -45,7 +44,8 @@ export default function RootLayout() {
               headerShown: false,
             }}
           >
-            <Stack.Screen name="(tab)" options={{ headerShown: false }} />
+            {/* <Stack.Screen name="(tab)" options={{ headerShown: false }} /> */}
+            {/* <Stack.Screen name="Tabs" component={TabLayout} /> */}
           </Stack>
         </SignedIn>
 
