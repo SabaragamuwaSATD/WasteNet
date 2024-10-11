@@ -39,18 +39,18 @@ export default function home() {
   const [modalVisible, setModalVisible] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState("");
 
-  // const handleAdminPress = () => {
-  //   setModalVisible(true);
-  // };
+  const handleAdminPress = () => {
+    setModalVisible(true);
+  };
 
-  // const handlePasswordSubmit = () => {
-  //   if (enteredPassword === "admin123") {
-  //     setModalVisible(false);
-  //     router.push("/home");
-  //   } else {
-  //     Alert.alert("Error", "Incorrect Password!");
-  //   }
-  // };
+  const handlePasswordSubmit = () => {
+    if (enteredPassword === "admin123") {
+      setModalVisible(false);
+      router.push("/home");
+    } else {
+      Alert.alert("Error", "Incorrect Password!");
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -89,8 +89,7 @@ export default function home() {
             <CategoryButton
               icon={paymentImg}
               label="Admin"
-              // onPress={handleAdminPress}
-              onPress={() => router.push("../(tab)/home")}
+              onPress={handleAdminPress}
             />
             <CategoryButton
               icon={maintenanceImg}
@@ -99,7 +98,7 @@ export default function home() {
             />
           </View>
         </ScrollView>
-        {/* <Modal
+        <Modal
           animationType="slide"
           transparent={true}
           visible={modalVisible}
@@ -124,7 +123,7 @@ export default function home() {
               <Button title="OK" onPress={handlePasswordSubmit} />
             </View>
           </View>
-        </Modal> */}
+        </Modal>
       </SafeAreaView>
     </GestureHandlerRootView>
   );

@@ -87,7 +87,7 @@ export default function FinanceDashboard() {
           <CategoryButton
             icon={maintenanceImg}
             label="Maintenance"
-            onPress={() => router.push("../Finance/maintenance")}
+            onPress={() => router.push("../Driver/clinetRequests")}
           />
         </View>
       </ScrollView>
