@@ -93,11 +93,11 @@ export default function UserHome() {
             label="My Requets"
             onPress={() => router.push("./userRequests")}
           />
-          <CategoryButton
+          {/* <CategoryButton
             icon={ordersImg}
             label="Requets Progress"
             onPress={() => router.push("./userRequests")}
-          />
+          /> */}
         </View>
       </ScrollView>
     </SafeAreaView>
